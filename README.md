@@ -38,6 +38,6 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 - django-bootstrap5
 
 ---
-Development Team: Group 112  
+Development Team: Group 112
 Contact: 2974710w@student.gla.ac.uk  
 Course: Internet Technology - Assessed Exercise

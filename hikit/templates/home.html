@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Hikit Trails{% endblock %}
+
+{% block content %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for route in routes %}
+    <div class="col">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">{{ route.title }}</h5>
+                <small class="text-muted">by {{ route.author.username }}</small>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="badge bg-primary">{{ route.get_difficulty_display }}</span>
+                    <span class="text-muted">{{ route.distance }} km</span>
+                </div>
+                <p class="card-text">{{ route.description|truncatechars:150 }}</p>
+            </div>
+            <div class="card-footer bg-white">
+                <small class="text-muted">Posted {{ route.created_at|timesince }} ago</small>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">No hiking routes found. Be the first to add one!</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+.gradient-header {
+    background: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    color: #2d3748;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+
+.route-card {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.09);
+    border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.route-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+.badge-custom {
+    background: #f8f9fa;
+    color: #4a5568;
+    font-size: 0.85rem;
+    border: 1px solid rgba(0, 0, 0, 0.09);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-weight: 500;
+}
+
+.nav-link-hover {
+    color: #4a5568;
+    transition: color 0.15s ease;
+}
+
+.nav-link-hover:hover {
+    color: #2d3748;
+    text-decoration: none;
+}
+
+/* Additional minimalist enhancements */
+.btn-success {
+    background: #48bb78;
+    border-color: #48bb78;
+}
+
+.btn-light {
+    background: #f8f9fa;
+    border-color: rgba(0, 0, 0, 0.09);
+}

@@ -1,0 +1,76 @@
+{% load bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hikit - Hiking Trails{% endblock %}</title>
+
+    {# Bootstrap 5 CSS via template tag #}
+    {% bootstrap_css %}
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-light">
+    <!-- Header Navigation -->
+    <nav class="navbar navbar-expand-lg gradient-header mb-5">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'image/logo.png' %}" alt="Logo" width="40" class="me-2">
+                <span class="h2 mb-0">HIKIT</span>
+            </a>
+
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown">
+                        👋 Hi, {{ user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form action="{% url 'logout' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <a href="{% url 'add_route' %}" class="btn btn-success ms-3">
+                    <i class="bi bi-plus-circle"></i> New Route
+                </a>
+                {% else %}
+                <div class="d-flex gap-2">
+                    <a href="{% url 'login' %}" class="btn btn-outline-light nav-link-hover">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-light nav-link-hover">Register</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-grey mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-1 text-sm">&copy; 2025 Hikit Trails. All rights reserved.</p>
+            <p class="mb-1 text-sm">This system was developed as part of assessed coursework for Internet Technology at UofG.</p>
+            <p class="mb-1 text-sm">It is not maintained for public use and exists only for demonstration purposes.</p>
+        </div>
+    </footer>
+
+    {# Bootstrap JS with Popper via template tag #}
+    {% bootstrap_javascript %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
