@@ -1,4 +1,4 @@
-.gradient-header {
+.white-header {
     background: white;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     color: #2d3748;
@@ -49,4 +49,25 @@
 .btn-light {
     background: #f8f9fa;
     border-color: rgba(0, 0, 0, 0.09);
+}
+
+/* 优化移动端导航栏 */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        padding-top: 1rem;
+    }
+
+    .nav-item {
+        margin-bottom: 0.5rem;
+    }
+
+    .dropdown-menu {
+        border: none;
+        box-shadow: none;
+    }
+}
+
+/* 保持品牌标志点击区域 */
+.navbar-brand {
+    padding: 0.25rem 0;
 }
