@@ -8,6 +8,9 @@ def home(request):
     routes = Route.objects.all().order_by('-created_at')
     return render(request, 'home.html', {'routes': routes})
 
+def about(request):
+    return render(request, 'about.html')
+
 def route_list(request):
     routes = Route.objects.all()
     return render(request, 'route_list.html', {'routes': routes})

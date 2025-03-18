@@ -71,3 +71,13 @@
 .navbar-brand {
     padding: 0.25rem 0;
 }
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.invalid-feedback {
+    font-size: 0.9rem;
+}
