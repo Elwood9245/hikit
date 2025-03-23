@@ -4,17 +4,70 @@
 
     <h2>Search Results for "{{ query }}"</h2>
 
-    <ul>
-    {% for route in results %}
+    <div class="container">
+    <div class="card shadow-sm p-5">
+        <div class="row g-3">
+            {% for route in results %}
+            <div class="col-12">
+                <div class="card border shadow-sm px-4">
+                    <div class="card-body px-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h2 class="h4 card-title mb-1">
+                                <a href="{% url 'route_detail' route.id %}"
+                                   class="text-decoration-none text-dark">
+                                    {{ route.name }}
+                                </a>
+                            </h2>
+                        </div>
 
-        <li>
-            <a href="{% url 'route_detail' route.id %}">{{ route.name }}</a>
-        </li>
+                        <div class="row g-3 mb-3">
+                            <!-- Distance -->
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-signpost-split text-success me-2"></i>
+                                    <div>
+                                        <div class="small">{{ route.distance }} km</div>
+                                        <small class="text-muted">Distance</small>
+                                    </div>
+                                </div>
+                            </div>
 
-    {% empty %}
-        <li>No results found.</li>
-    {% endfor %}
-    </ul>
+                            <!-- Elevation -->
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-graph-up text-danger me-2"></i>
+                                    <div>
+                                        <div class="small">{{ route.elevation_gain }} m</div>
+                                        <small class="text-muted">Elevation</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Difficulty -->
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-activity text-primary me-2"></i>
+                                    <div>
+                                        <div class="small">{{ route.difficulty }}</div>
+                                        <small class="text-muted">Difficulty</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end border-top pt-3">
+                            <a href="{% url 'route_detail' route.id %}"
+                               class="btn btn-outline-primary">
+                                View Details <i class="bi bi-arrow-right-short ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
 
 
