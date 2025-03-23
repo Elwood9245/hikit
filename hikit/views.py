@@ -33,7 +33,10 @@ def profile(request):
 
 def search(request):
     query = request.GET.get('q', '') # q为key对应的value为什么
-    results = Route.objects.filter(name__icontains=query) # 一个QuerySet 存储着所有符合条件的对象
+    if query:
+        results = Route.objects.filter(name__icontains=query)  # 一个QuerySet 存储着所有符合条件的对象
+    else:
+        results = Route.objects.none()
     return render(request, 'search_results.html', {'results': results, 'query': query})
 
 def add_route(request):
