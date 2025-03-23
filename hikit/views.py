@@ -16,7 +16,7 @@ def route_list(request):
     return render(request, 'route_list.html', {'routes': routes})
 
 def route_detail(request, route_id):
-    route = get_object_or_404(Route, pk=route_id)
+    route = get_object_or_404(Route, pk=route_id) # 根据主键寻找具体数据
     return render(request, 'route.html', {'route': route})
 
 def create_event(request, route_id):
@@ -32,9 +32,10 @@ def profile(request):
     return render(request, 'profile.html')
 
 def search(request):
-    query = request.GET.get('q', '')
-    results = Route.objects.filter(name__icontains=query)
+    query = request.GET.get('q', '') # q为key对应的value为什么
+    results = Route.objects.filter(name__icontains=query) # 一个QuerySet 存储着所有符合条件的对象
     return render(request, 'search_results.html', {'results': results, 'query': query})
+
 def add_route(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -45,7 +46,7 @@ def add_route(request):
             route = form.save(commit=False)
             route.created_by = request.user
             route.save()
-            return redirect('route_detail', route_id=route.id)
+            return redirect('route_detail', route_id=route.id) # 添加完了之后 就重定向到详情的页面
     else:
         form = RouteForm()
 

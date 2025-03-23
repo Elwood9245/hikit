@@ -18,7 +18,7 @@ class Route(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_routes')
-    featured_image = models.ImageField(upload_to='route_images/', null=True, blank=True)
+    featured_image = models.ImageField(upload_to='route_images/', null=True, blank=True) # 这里的upload_to值得是需要上传到这个文件夹中
 
     def __str__(self):
         return self.name

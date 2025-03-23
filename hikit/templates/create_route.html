@@ -59,9 +59,15 @@
                         <a href="{% url 'route_list' %}" class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-left me-2"></i>Cancel
                         </a>
-                        <button type="submit" class="btn btn-success px-4">
-                            <i class="bi bi-save me-2"></i>Create Route
-                        </button>
+
+                        <!--增加form让其具有提交的功能 提交完成之后 还是在原来的表单中-->
+                        <form action="{% url 'add_route' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-save me-2"></i>Create Route
+                            </button>
+                        </form>
+
                     </div>
                 </form>
             </div>

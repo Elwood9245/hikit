@@ -52,15 +52,19 @@
                         <input class="form-control" type="search" name="q"
                                placeholder="Search routes..."
                                aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">
-                            <i class="bi bi-search"></i> Search
-                        </button>
+
+                        <form action = "{% url 'search' %}" method = "GET">
+                            <button class="btn btn-outline-success" type="submit">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                        </form>
                     </div>
                 </form>
 
                 <!-- 用户操作区域 -->
                 <div class="d-flex align-items-center gap-2">
                     {% if user.is_authenticated %}
+
                         <!-- 桌面端用户菜单 -->
                         <div class="dropdown d-none d-lg-block">
                             <a class="btn btn-light dropdown-toggle"
