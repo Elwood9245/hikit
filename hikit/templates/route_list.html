@@ -1,12 +1,80 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Hiking Routes - Hikit{% endblock %}
 
 {% block content %}
-<h1>All Hiking Routes</h1>
-<ul>
-    {% for route in routes %}
-    <li>
-        <a href="{% url 'route_detail' route.id %}">{{ route.name }}</a>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <div class="card shadow-sm p-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 fw-bold mx-3">All Hiking Routes</h1>
+            {% if user.is_authenticated %}
+            <a href="{% url 'add_route' %}" class="btn btn-primary mx-2">
+                <i class="bi bi-plus-lg me-2"></i>New Route
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="row g-3">
+            {% for route in routes %}
+            <div class="col-12">
+                <div class="card border shadow-sm px-4">
+                    <div class="card-body px-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h2 class="h4 card-title mb-1">
+                                <a href="{% url 'route_detail' route.id %}"
+                                   class="text-decoration-none text-dark">
+                                    {{ route.name }}
+                                </a>
+                            </h2>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <!-- Distance -->
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-signpost-split text-success me-2"></i>
+                                    <div>
+                                        <div class="small">{{ route.distance }} km</div>
+                                        <small class="text-muted">Distance</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Elevation -->
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-graph-up text-danger me-2"></i>
+                                    <div>
+                                        <div class="small">{{ route.elevation_gain }} m</div>
+                                        <small class="text-muted">Elevation</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Difficulty -->
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-activity text-primary me-2"></i>
+                                    <div>
+                                        <div class="small">{{ route.difficulty }}</div>
+                                        <small class="text-muted">Difficulty</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end border-top pt-3">
+                            <a href="{% url 'route_detail' route.id %}"
+                               class="btn btn-outline-primary">
+                                View Details <i class="bi bi-arrow-right-short ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
