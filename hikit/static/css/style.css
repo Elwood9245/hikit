@@ -51,7 +51,7 @@
     border-color: rgba(0, 0, 0, 0.09);
 }
 
-/* 优化移动端导航栏 */
+/* navbar on small screen */
 @media (max-width: 991px) {
     .navbar-collapse {
         padding-top: 1rem;
@@ -67,7 +67,6 @@
     }
 }
 
-/* 保持品牌标志点击区域 */
 .navbar-brand {
     padding: 0.25rem 0;
 }

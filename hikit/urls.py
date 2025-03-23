@@ -10,8 +10,8 @@ urlpatterns = [
 
     # route
     path('routes/', views.route_list, name='route_list'),
-    path('route/<int:route_id>/', views.route_detail, name='route_detail'),
-    path('route/<int:route_id>/create-event/', views.create_event, name='create_event'),
+    path('routes/<int:route_id>/', views.route_detail, name='route_detail'),
+    path('routes/<int:route_id>/create-event/', views.create_event, name='create_event'),
     path('routes/add/', views.add_route, name='add_route'),
 
     # Events
