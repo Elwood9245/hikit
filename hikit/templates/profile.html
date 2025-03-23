@@ -1,9 +1,74 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>Welcome, {{ user.username }}</h1>
-<h3>Your Events</h3>
-<ul>
+<div class="container-fluid mt-5">
+  <div class="row">
 
-</ul>
+    <!-- Left Profile Column -->
+    <div class="col-md-3 text-center">
+      <img src="{% static 'image/tintin.png' %}" class="rounded-circle mb-3" alt="Profile Avatar" width="120">
+      <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-dark w-75">Log out</button>
+      </form>
+    </div>
+
+    <!-- Activities Section -->
+    <div class="col-md-9 d-flex justify-content-around flex-wrap gap-4">
+
+      <!-- Launched Routes -->
+      <div class="card text-center" style="width: 18rem;">
+        <div class="card-header fw-bold">Launched</div>
+        <div class="card-body">
+          <div class="mb-2">&#x25B2;</div>  <!-- Up arrow ▲ -->
+          {% for route in launched_routes %}
+            {% if route.image %}
+              <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
+            {% endif %}
+            <p>{{ route.title }}</p>
+          {% empty %}
+            <p class="text-muted">No launched routes.</p>
+          {% endfor %}
+          <div class="mt-2">&#x25BC;</div>  <!-- Down arrow ▼ -->
+        </div>
+      </div>
+
+      <!-- Saved Activities -->
+      <div class="card text-center" style="width: 18rem;">
+        <div class="card-header fw-bold">Saved Activities</div>
+        <div class="card-body">
+          <div class="mb-2">&#x25B2;</div>
+          {% for route in saved_routes %}
+            {% if route.image %}
+              <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
+              <p>{{ route.title }}</p>
+            {% endif %}
+          {% empty %}
+            <p class="text-muted">No saved activities.</p>
+          {% endfor %}
+          <div class="mt-2">&#x25BC;</div>
+        </div>
+      </div>
+
+      <!-- Past Activities -->
+      <div class="card text-center" style="width: 18rem;">
+        <div class="card-header fw-bold">Past Activities</div>
+        <div class="card-body">
+          <div class="mb-2">&#x25B2;</div>
+          {% for route in past_routes %}
+            {% if route.image %}
+              <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
+              <p>{{ route.title }}</p>
+            {% endif %}
+          {% empty %}
+            <p class="text-muted">No past activities.</p>
+          {% endfor %}
+          <div class="mt-2">&#x25BC;</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 {% endblock %}

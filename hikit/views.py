@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Route, Event
 from .forms import RouteForm
@@ -82,3 +83,19 @@ def register_view(request):
         form = UserCreationForm()
 
     return render(request, 'register.html', {'form': form})
+
+@login_required
+def profile(request):
+    user = request.user
+
+    launched_routes = Route.objects.filter(created_by=user)
+    saved_routes = user.saved_routes.all()  # Adjust depending on your model setup
+    past_routes = user.past_routes.all()    # Same here
+
+    context = {
+        'launched_routes': launched_routes,
+        'saved_routes': saved_routes,
+        'past_routes': past_routes,
+    }
+    return render(request, 'profile.html', context)
+
