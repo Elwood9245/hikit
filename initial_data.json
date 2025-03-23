@@ -1,0 +1,53 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$63eB7HcJfCNqLuztYEjRxS$/8iKhMM7zKW5Ic+d/WzJf6NjNqXu5L1/qgZ/5X3H9m0=",
+      "last_login": "2025-03-23T13:08:23.559Z",
+      "is_superuser": false,
+      "username": "test",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-03-17T17:41:41.556Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "1woj7o5v0eq43ltwmqp9ee7q09dvfxqt",
+    "fields": {
+      "session_data": ".eJxVjDsOwjAQRO_iGln-LXYo6TmDteu1cQA5UpxUiLuTSClgynlv5i0irkuNa89zHFlchBWn344wPXPbAT-w3SeZprbMI8ldkQft8jZxfl0P9--gYq_bOnjEolhpcEp7T7CFktXJQsnhnJncYD24YMgWMyA7YmNcKhaCB_Di8wXSFDdJ:1twL3v:Jo3owHK2rlUB_kxeEpOUMB3VKoLN-xzkFfkWFTVH848",
+      "expire_date": "2025-04-06T13:08:23.560Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "ez6nt0eajzoun3kjx49ieizpqpotcq3h",
+    "fields": {
+      "session_data": ".eJxVjDsOwjAQRO_iGln-LXYo6TmDteu1cQA5UpxUiLuTSClgynlv5i0irkuNa89zHFlchBWn344wPXPbAT-w3SeZprbMI8ldkQft8jZxfl0P9--gYq_bOnjEolhpcEp7T7CFktXJQsnhnJncYD24YMgWMyA7YmNcKhaCB_Di8wXSFDdJ:1tuWRK:ZzOpDkLVfTDcK5yMAGxZwDkk8hCPO2Toxi6O7Je0hC8",
+      "expire_date": "2025-04-01T12:53:02.468Z"
+    }
+  },
+  {
+    "model": "hikit.route",
+    "pk": 1,
+    "fields": {
+      "name": "Balloch Castle Country Park Circular",
+      "description": "Balloch Castle Country Park lies on the southeast shores of Loch Lomond, on the northern edge of Balloch, 20 miles north of Glasgow. The park itself comprises 200 acres of semi-natural and ornamental woodland, open parkland, formal gardens, meadow, play parks and shoreline. It is located directly on the south-east shores of Loch Lomond, on the northern edge of Balloch.",
+      "distance": "4.51",
+      "elevation_gain": 93,
+      "difficulty": "Easy",
+      "created_at": "2025-03-22T17:35:32.294Z",
+      "updated_at": "2025-03-22T17:35:32.294Z",
+      "created_by": [
+        "test"
+      ],
+      "featured_image": "route_images/9B9BA1D3-3FBB-4BB8-AF8A-16C5F93A26EC_1_105_c_Xdos2ZB.jpeg"
+    }
+  }
+]
