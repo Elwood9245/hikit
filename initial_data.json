@@ -49,5 +49,20 @@
       ],
       "featured_image": "route_images/9B9BA1D3-3FBB-4BB8-AF8A-16C5F93A26EC_1_105_c_Xdos2ZB.jpeg"
     }
+  },
+  {
+    "model": "hikit.route",
+    "pk": 2,
+    "fields": {
+      "name": "University of Glasgow Circle",
+      "description": "A good way to explore UofG!",
+      "distance": "2.30",
+      "elevation_gain": 9,
+      "difficulty": "Easy",
+      "created_at": "2025-03-23T15:59:15.803Z",
+      "updated_at": "2025-03-23T15:59:15.803Z",
+      "created_by": 3,
+      "featured_image": "route_images/unilib.jpeg"
+    }
   }
 ]
