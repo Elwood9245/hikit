@@ -81,3 +81,12 @@
 .invalid-feedback {
     font-size: 0.9rem;
 }
+
+.object-fit-cover {
+    object-fit: cover;
+    object-position: center;
+}
+.card {
+    border-radius: 1rem;
+    overflow: hidden;
+}

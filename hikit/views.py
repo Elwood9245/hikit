@@ -40,16 +40,16 @@ def add_route(request):
         return redirect('login')
 
     if request.method == 'POST':
-        form = RouteForm(request.POST)
+        form = RouteForm(request.POST, request.FILES)  # Add request.FILES for image upload
         if form.is_valid():
             route = form.save(commit=False)
-            route.author = request.user
+            route.created_by = request.user
             route.save()
-            return redirect('home')
+            return redirect('route_detail', route_id=route.id)
     else:
         form = RouteForm()
 
-    return render(request, 'route.html', {'form': form, 'action': 'Add'})
+    return render(request, 'create_route.html', {'form': form})
 
 
 def login_view(request):
@@ -72,7 +72,7 @@ def logout_view(request):
 
 def register_view(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)

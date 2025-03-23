@@ -17,6 +17,7 @@ class Route(models.Model):
     difficulty = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_routes')
     featured_image = models.ImageField(upload_to='route_images/', null=True, blank=True)
 
     def __str__(self):
