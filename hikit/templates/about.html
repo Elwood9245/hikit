@@ -1,6 +1,51 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Hikit{% endblock %}
 
 {% block content %}
-<h1>About Us</h1>
+
+    <div class="card shadow-sm p-5">
+        <h1 class="display-4">About Us</h1>
+        <h3 class="my-4">
+            <i class="bi bi-compass me-2"></i>Our Mission
+        </h3>
+        <p class="lead">
+            Hikit connects hiking enthusiasts with beautiful trails and like-minded adventurers.
+            We aim to make outdoor exploration accessible, social, and environmentally
+            conscious.
+        </p>
+        <ul class="list-unstyled">
+            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Discover
+                curated hiking routes
+            </li>
+            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Join
+                community-organized events
+            </li>
+            <li><i class="bi bi-check2-circle text-success me-2"></i>Track personal achievements
+            </li>
+        </ul>
+
+        <h3 class="my-4">
+            <i class="bi bi-people me-2"></i>For the Hiking Community
+        </h3>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="text-center">
+                    <i class="bi bi-map fs-1 text-success"></i>
+                    <h5 class="mt-2">Detailed Trail Info</h5>
+                    <p class="text-muted small">Difficulty levels, photos, and user reviews</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-center">
+                    <i class="bi bi-calendar-event fs-1 text-warning"></i>
+                    <h5 class="mt-2">Group Events</h5>
+                    <p class="text-muted small">Organize or join hiking events</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 {% endblock %}
