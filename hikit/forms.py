@@ -9,9 +9,13 @@ class RouteForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'date', 'max_participants']
+        fields = ['title', 'description', 'date', 'max_participants', 'status']
         widgets = {
             'date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+        labels = {
+            'max_participants': 'Maximum Participants',
+            'status': 'Event Status'
         }
 
 class UserProfileForm(forms.ModelForm):

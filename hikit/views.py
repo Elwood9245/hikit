@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Route, Event
-from .forms import RouteForm
+from .models import Route, Event, Participation
+from .forms import RouteForm, EventForm
+
 
 def home(request):
     routes = Route.objects.all().order_by('-created_at')
@@ -19,14 +21,56 @@ def route_detail(request, route_id):
     route = get_object_or_404(Route, pk=route_id) # 根据主键寻找具体数据
     return render(request, 'route.html', {'route': route})
 
+
 def create_event(request, route_id):
-    route = get_object_or_404(Route, pk=route_id)
-    # 处理表单提交逻辑
-    return render(request, 'create_event.html', {'route': route})
+    route = get_object_or_404(Route, id=route_id)
+
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.route = route
+            event.organizer = request.user
+            event.save()
+            return redirect('event_list')
+    else:
+        form = EventForm()
+
+    return render(request, 'create_event.html', {
+        'form': form,
+        'route': route
+    })
 
 def event_list(request):
     events = Event.objects.all()
     return render(request, 'event_list.html', {'events': events})
+
+def event_detail(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    return render(request, 'event_detail.html', {'event': event})
+
+def join_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if request.method == 'POST' and request.user.is_authenticated:
+        if not event.participants.filter(user=request.user).exists() and event.can_join:
+            Participation.objects.create(
+                event=event,
+                user=request.user,
+                notes=request.POST.get('notes', '')
+            )
+            event.current_participants += 1
+            event.save()
+    return redirect('event_detail', event.id)
+
+def leave_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if request.method == 'POST' and request.user.is_authenticated:
+        participation = event.participants.filter(user=request.user).first()
+        if participation:
+            participation.delete()
+            event.current_participants -= 1
+            event.save()
+    return redirect('event_detail', event.id)
 
 def profile(request):
     return render(request, 'profile.html')
@@ -85,3 +129,51 @@ def register_view(request):
         form = UserCreationForm()
 
     return render(request, 'register.html', {'form': form})
+
+
+@login_required
+def join_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+
+    if request.method == 'POST':
+        # 检查是否还能参加
+        if event.can_join and not event.participants.filter(user=request.user).exists():
+            Participation.objects.create(
+                event=event,
+                user=request.user,
+                notes=request.POST.get('notes', '')
+            )
+            event.current_participants += 1
+            event.save()
+
+    return redirect('event_detail', event_id=event_id)
+
+
+@login_required
+def leave_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+
+    if request.method == 'POST':
+        participation = event.participants.filter(user=request.user).first()
+        if participation:
+            participation.delete()
+            event.current_participants -= 1
+            event.save()
+
+    return redirect('event_detail', event_id=event_id)
+
+
+def event_detail(request, event_id):
+    event = get_object_or_404(Event.objects.prefetch_related('participants'), id=event_id)
+    participation = None
+
+    if request.user.is_authenticated:
+        participation = Participation.objects.filter(
+            event=event,
+            user=request.user
+        ).first()
+
+    return render(request, 'event_detail.html', {
+        'event': event,
+        'participation': participation  # 关键参数
+    })

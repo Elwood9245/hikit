@@ -3,6 +3,9 @@ from django.urls import path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
+
+from .views import event_list
+
 urlpatterns = [
     #    path('admin/', admin.site.urls),
     path('', views.home, name='home'),
@@ -17,6 +20,11 @@ urlpatterns = [
     # Events
     path('events/', views.event_list, name='event_list'),
 
+    path('events/<int:event_id>/', views.event_detail, name='event_detail'),
+
+    path('events/<int:event_id>/join/', views.join_event, name='join_event'),
+    path('events/<int:event_id>/leave/', views.leave_event, name='leave_event'),
+
     # User
     path('profile/', views.profile, name='profile'),
     path('search/', views.search, name='search'),
@@ -25,6 +33,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_view, name='register'),
+
+
 ]
 
 if settings.DEBUG:
