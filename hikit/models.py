@@ -19,6 +19,8 @@ class Route(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_routes')
+    saved_by = models.ManyToManyField(User, related_name='saved_routes', blank=True)
+    completed_by = models.ManyToManyField(User, related_name='past_routes', blank=True)
     featured_image = models.ImageField(upload_to='route_images/', null=True, blank=True) # 这里的upload_to值得是需要上传到这个文件夹中
 
     def __str__(self):

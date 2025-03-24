@@ -130,6 +130,24 @@ def register_view(request):
 
     return render(request, 'register.html', {'form': form})
 
+@login_required
+def profile(request):
+    user = request.user
+
+    launched_routes = Route.objects.filter(created_by=user)
+    launched_events = Event.objects.filter(created_by=user)
+    saved_routes = user.saved_routes.all()  # Adjust depending on your model setup
+    past_routes = user.past_routes.all()    # Same here
+
+    context = {
+        'launched_routes': launched_routes,
+        'launched_events': launched_events,
+        'saved_routes': saved_routes,
+        'past_routes': past_routes,
+    }
+    return render(request, 'profile.html', context)
+
+
 
 @login_required
 def join_event(request, event_id):
