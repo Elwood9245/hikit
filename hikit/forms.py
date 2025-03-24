@@ -18,3 +18,9 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['bio', 'hiking_experience', 'profile_picture', 'phone_number', 'emergency_contact']
+
+        def __init__(self, *args, **kwargs):
+            user = kwargs.pop('user', None)
+            super(UserProfileForm, self).__init__(*args, **kwargs)
+            if user:
+                self.fields['username'].initial = user.username

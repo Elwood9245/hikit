@@ -19,10 +19,18 @@
 
       <!-- Launched Routes -->
       <div class="card text-center" style="width: 18rem;">
-        <div class="card-header fw-bold">Launched</div>
+        <div class="card-header fw-bold">My Routes</div>
         <div class="card-body">
           <div class="mb-2">&#x25B2;</div>  <!-- Up arrow ▲ -->
+
+         <!-- debug block -->
+         <p style="color: red;">Found {{ launched_routes|length }} launched route(s)</p>
+
           {% for route in launched_routes %}
+            <p style="color: blue;">TITLE: {{ route.title }}</p>
+            <p>HAS IMAGE? {% if route.image %} ✅ {% else %} ❌ {% endif %}</p>
+
+
             {% if route.image %}
               <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
             {% endif %}
@@ -34,9 +42,26 @@
         </div>
       </div>
 
-      <!-- Saved Activities -->
+          <!-- Launched Events -->
       <div class="card text-center" style="width: 18rem;">
-        <div class="card-header fw-bold">Saved Activities</div>
+        <div class="card-header fw-bold">Launched Events</div>
+        <div class="card-body">
+          <div class="mb-2">&#x25B2;</div>  <!-- Up arrow ▲ -->
+          {% for event in launched_events %}
+            {% if event.image %}
+              <img src="{{ event.image.url }}" class="img-fluid rounded mb-2" alt="{{ event.title }}">
+            {% endif %}
+            <p>{{ event.title }}</p>
+          {% empty %}
+            <p class="text-muted">No launched events.</p>
+          {% endfor %}
+          <div class="mt-2">&#x25BC;</div>  <!-- Down arrow ▼ -->
+        </div>
+      </div>
+
+      <!-- Saved Routes -->
+      <div class="card text-center" style="width: 18rem;">
+        <div class="card-header fw-bold">Saved Routes</div>
         <div class="card-body">
           <div class="mb-2">&#x25B2;</div>
           {% for route in saved_routes %}

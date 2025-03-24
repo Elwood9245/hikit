@@ -29,9 +29,6 @@ def event_list(request):
     events = Event.objects.all()
     return render(request, 'event_list.html', {'events': events})
 
-def profile(request):
-    return render(request, 'profile.html')
-
 def search(request):
     query = request.GET.get('q', '') # q为key对应的value为什么
     results = Route.objects.filter(name__icontains=query) # 一个QuerySet 存储着所有符合条件的对象
@@ -89,11 +86,13 @@ def profile(request):
     user = request.user
 
     launched_routes = Route.objects.filter(created_by=user)
+    launched_events = Event.objects.filter(created_by=user)
     saved_routes = user.saved_routes.all()  # Adjust depending on your model setup
     past_routes = user.past_routes.all()    # Same here
 
     context = {
         'launched_routes': launched_routes,
+        'launched_events': launched_events,
         'saved_routes': saved_routes,
         'past_routes': past_routes,
     }
