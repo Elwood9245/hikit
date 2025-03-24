@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 STATUS_CHOICES = [
     ('planning', 'Planning'),
@@ -34,6 +35,26 @@ class Event(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='planning')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def can_join(self):
+        return (
+                self.status == 'planning' and
+                self.current_participants < self.max_participants and
+                self.date > timezone.now()
+        )
+
+    @property
+    def is_full(self):
+        return self.current_participants >= self.max_participants
+
+    @property
+    def is_past(self):
+        return self.date < timezone.now()
+
+    @property
+    def participation_percent(self):
+        return (self.current_participants / self.max_participants) * 100
 
     def __str__(self):
         return f"{self.title} - {self.route.name}"

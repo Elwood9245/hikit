@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ event.title }} - Hikit{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow-sm p-5 mb-4">
+        <!-- 头部区域 -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h2 fw-bold">{{ event.title }}</h1>
+                <div class="text-muted">
+                    <i class="bi bi-signpost me-1"></i>
+                    {{ event.route.name }}
+                </div>
+            </div>
+            <div class="btn-group">
+                <a href="{% url 'route_detail' event.route.id %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Route
+                </a>
+            </div>
+        </div>
+
+        <!-- 活动信息 -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-8">
+                <div class="card border-0 bg-light">
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">
+                            <i class="bi bi-info-circle me-2"></i>Event Details
+                        </h3>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-calendar-event me-2 text-primary"></i>
+                                    <div>
+                                        <div class="small fw-bold">Date & Time</div>
+                                        <div>{{ event.date|date:"M j, Y H:i" }}</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-people me-2 text-success"></i>
+                                    <div>
+                                        <div class="small fw-bold">Participants</div>
+                                        <div>{{ event.current_participants }} / {{ event.max_participants }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-person-circle me-2 text-info"></i>
+                                    <div>
+                                        <div class="small fw-bold">Organizer</div>
+                                        <div>{{ event.organizer.username }}</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-activity me-2 text-warning"></i>
+                                    <div>
+                                        <div class="small fw-bold">Status</div>
+                                        <div class="badge {% if event.status == 'planning' %}bg-warning{% elif event.status == 'ongoing' %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {{ event.get_status_display }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h3 class="h5 mb-3">
+                        <i class="bi bi-card-text me-2"></i>Description
+                    </h3>
+                    <div class="text-muted" style="white-space: pre-line;">{{ event.description }}</div>
+                </div>
+            </div>
+
+            <!-- 参与板块 -->
+            <div class="col-md-4">
+                <div class="card border-0 bg-light">
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">
+                            <i class="bi bi-people me-2"></i>Participation
+                        </h3>
+                        
+                        {% if user.is_authenticated %}
+                            {% if participation %}
+                            <!-- 已参加状态 -->
+                            <form method="post" action="{% url 'leave_event' event.id %}">
+                                {% csrf_token %}
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="bi bi-x-circle me-1"></i>Leave Event
+                                    </button>
+                                </div>
+                            </form>
+                            {% else %}
+                            <!-- 未参加状态 -->
+                            {% if event.can_join %}
+                            <form method="post" action="{% url 'join_event' event.id %}">
+                                {% csrf_token %}
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-1"></i>Join Event
+                                    </button>
+                                </div>
+                            </form>
+                            {% else %}
+                            <div class="alert alert-warning">
+                                {% if event.is_full %}
+                                This event is full
+                                {% elif event.is_past %}
+                                This event has ended
+                                {% else %}
+                                Participation is closed
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                        {% else %}
+                        <div class="alert alert-info">
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="alert-link">
+                                Login to join this event
+                            </a>
+                        </div>
+                        {% endif %}
+
+                        <!-- 参与者列表 -->
+                        {% if event.participants.exists %}
+                        <div class="mt-4">
+                            <h4 class="h6 mb-3">Participants ({{ event.participants.count }})</h4>
+                            <div class="list-group">
+                                {% for participation in event.participants.all %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <div>{{ participation.user.username }}</div>
+                                        <small class="text-muted">
+                                            {{ participation.joined_at|date:"M j" }}
+                                        </small>
+                                    </div>
+                                    {% if participation.notes %}
+                                    <div class="text-muted small mt-1">
+                                        <i class="bi bi-pencil"></i> {{ participation.notes|truncatechars:40 }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

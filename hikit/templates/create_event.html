@@ -1,9 +1,96 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
-<h1>Create Event for {{ route.name }}</h1>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-success">Create Event</button>
-</form>
+<div class="container">
+    <div class="card shadow-sm p-5 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 fw-bold">Create Event for {{ route.name }}</h1>
+            <a href="{% url 'route_detail' route.id %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Route
+            </a>
+        </div>
+
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <!-- 添加错误提示 -->
+            {% if form.errors %}
+            <div class="alert alert-danger mb-4">
+                <strong>Error!</strong> Please correct the errors below.
+            </div>
+            {% endif %}
+
+            <!-- 手动渲染每个字段 -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-pencil-square me-2"></i>Event Title
+                        </label>
+                        {% render_field form.title class="form-control" placeholder="Enter event name" %}
+                        {% for error in form.title.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Date -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-calendar-event me-2"></i>Date & Time
+                        </label>
+                        {% render_field form.date class="form-control" type="datetime-local" %}
+                        {% for error in form.date.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <!-- Max Participants -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-people-fill me-2"></i>Maximum Participants
+                        </label>
+                        {% render_field form.max_participants class="form-control" min="1" max="50" %}
+                        {% for error in form.max_participants.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Status -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-clipboard-check me-2"></i>Event Status
+                        </label>
+                        {% render_field form.status class="form-select" %}
+                        {% for error in form.status.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-5">
+                <label class="form-label">
+                    <i class="bi bi-card-text me-2"></i>Event Description
+                </label>
+                {% render_field form.description class="form-control" rows="4" placeholder="Describe your event details..." %}
+                {% for error in form.description.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-end gap-3 border-top pt-4">
+                <button type="reset" class="btn btn-light">Reset Form</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-calendar-plus me-2"></i>Create Event
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
