@@ -135,7 +135,7 @@ def profile(request):
     user = request.user
 
     launched_routes = Route.objects.filter(created_by=user)
-    launched_events = Event.objects.filter(created_by=user)
+    launched_events = Event.objects.filter(organizer=user)
     saved_routes = user.saved_routes.all()  # Adjust depending on your model setup
     past_routes = user.past_routes.all()    # Same here
 
