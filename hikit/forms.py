@@ -1,5 +1,6 @@
 from django import forms
 from .models import Event, Route, UserProfile
+from django.core.exceptions import ValidationError
 
 class RouteForm(forms.ModelForm):
     class Meta:
@@ -21,10 +22,34 @@ class EventForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['bio', 'hiking_experience', 'profile_picture', 'phone_number', 'emergency_contact']
+        fields = ['bio', 'profile_picture']
+        widgets = {
+            'bio': forms.Textarea(attrs={
+                'rows': 3,
+                'class': 'form-control',
+                'placeholder': 'Share something about yourself...'
+            }),
+            'profile_picture': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            })
+        }
+        labels = {
+            'profile_picture': "Profile Photo"
+        }
 
-        def __init__(self, *args, **kwargs):
-            user = kwargs.pop('user', None)
-            super(UserProfileForm, self).__init__(*args, **kwargs)
-            if user:
-                self.fields['username'].initial = user.username
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if self.user:
+            self.fields['bio'].initial = self.user.profile.bio if hasattr(self.user, 'profile') else ''
+
+    def clean_profile_picture(self):
+        picture = self.cleaned_data.get('profile_picture')
+        if picture:
+            if picture.size > 2*1024*1024:  # 2MB limit
+                raise ValidationError("Image too large (max 2MB)")
+            if not picture.name.lower().endswith(('.jpg', '.jpeg', '.png')):
+                raise ValidationError("Only JPG/PNG images allowed")
+        return picture
+
