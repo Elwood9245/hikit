@@ -89,3 +89,16 @@
     border-radius: 1rem;
     overflow: hidden;
 }
+
+.display-name {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #191970;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+}
+
+.display-name:hover {
+  color: #3498db;
+  transform: translateX(2px);
+}
