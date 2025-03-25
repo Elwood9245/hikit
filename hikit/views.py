@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Route, Event, Participation
-from .forms import RouteForm, EventForm
+from .models import Route, Event, Participation, UserProfile
+from .forms import RouteForm, EventForm, UserProfileForm
 
 
 def home(request):
@@ -20,7 +22,6 @@ def route_list(request):
 def route_detail(request, route_id):
     route = get_object_or_404(Route, pk=route_id) # 根据主键寻找具体数据
     return render(request, 'route.html', {'route': route})
-
 
 def create_event(request, route_id):
     route = get_object_or_404(Route, id=route_id)
@@ -134,6 +135,39 @@ def register_view(request):
 def profile(request):
     user = request.user
 
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+
+    # Handle profile photo upload (AJAX)
+    if request.method == 'POST' and 'profile_picture' in request.FILES:
+        profile_pic = request.FILES['profile_picture']
+        try:
+            # Delete old file if exists
+            if profile.profile_picture:
+                profile.profile_picture.delete(save=False)
+
+
+            # Save new file
+            profile.profile_picture = profile_pic
+            profile.save()
+
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'profile_picture_url': profile.profile_picture.url,
+                    'message': 'Profile photo updated successfully!'
+                })
+            else:
+                # Fallback for non-AJAX (just in case)
+                messages.success(request, 'Profile photo updated successfully!')
+                return redirect('profile')
+
+        except Exception as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': str(e)}, status=400)
+            else:
+                messages.error(request, f'Error: {str(e)}')
+                return redirect('profile')
+
     launched_routes = Route.objects.filter(created_by=user)
     launched_events = Event.objects.filter(organizer=user)
     saved_routes = user.saved_routes.all()  # Adjust depending on your model setup
@@ -144,10 +178,9 @@ def profile(request):
         'launched_events': launched_events,
         'saved_routes': saved_routes,
         'past_routes': past_routes,
+        'profile': profile,
     }
     return render(request, 'profile.html', context)
-
-
 
 @login_required
 def join_event(request, event_id):
