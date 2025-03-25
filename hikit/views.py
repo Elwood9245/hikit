@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.template.loader import render_to_string
+
 from .models import Route, Event, Participation, UserProfile, EventComment
 from .forms import RouteForm, EventForm, UserProfileForm, EventCommentForm
 
@@ -52,6 +54,7 @@ def event_list(request):
     events = Event.objects.all()
     return render(request, 'event_list.html', {'events': events})
 
+@login_required
 def event_detail(request, event_id):
     event = get_object_or_404(Event.objects.prefetch_related('participants'), id=event_id)
     comments = event.comments.filter(parent__isnull=True).order_by('-created_at')
@@ -80,14 +83,19 @@ def event_detail(request, event_id):
                         pass
 
                 comment.save()
-                print(comments)
 
-                # AJAX Response
+                # AJAX response with rendered HTML
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    html = render_to_string('partials/comment_item.html', {
+                        'comment': comment,
+                        'user': request.user,
+                        'event': event,
+                    }, request=request)
+
                     return JsonResponse({
                         'success': True,
                         'message': 'Comment posted!',
-                        'comment_html': f'<p>{comment.user.username}: {comment.content}</p>'
+                        'comment_html': html
                     })
 
                 return redirect('event_detail', event_id=event.id)
@@ -98,6 +106,7 @@ def event_detail(request, event_id):
                     'success': False,
                     'error': form.errors.as_json()
                 }, status=400)
+
     # Final render
     return render(request, 'event_detail.html', {
         'event': event,
@@ -105,6 +114,7 @@ def event_detail(request, event_id):
         'comments': comments,
         'participation': participation,
     })
+
 def join_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST' and request.user.is_authenticated:

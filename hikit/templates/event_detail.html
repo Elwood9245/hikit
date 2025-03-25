@@ -96,49 +96,28 @@
                       </div>
                     </div>
 
-                    <!-- Display Comments -->
-                    {% for comment in comments %}
-                    <div class="card comment-card mb-3 ms-3">
-                      <div class="card-body">
-                        <strong>{{ comment.user.username }}</strong>
-                        <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
-                        <p class="mt-2">{{ comment.content }}</p>
+                    <!-- Comment Section -->
+                    <div id="comment-section">
+                        {% for comment in comments %}
+                            {% include 'partials/comment_item.html' with comment=comment %}
+                            <!-- Display Replies -->
+                            {% for reply in comment.replies.all %}
+                                {% include 'partials/reply_item.html' with reply=reply event=event user=user %}
+                            {% endfor %}
 
-                        <!-- Reply form (nested) -->
-                        {% if user.is_authenticated %}
-                        <form method="post" class="ms-3 reply-form">
-                          {% csrf_token %}
-                          <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                          <textarea name="content" class="form-control mb-2" rows="2" placeholder="Reply..."></textarea>
-
-                        </form>
-                        {% endif %}
-
-                        <!-- Display Replies & Delete Button Side-by-Side -->
-                        {% for reply in comment.replies.all %}
-                        <div class="card reply-card mt-3">
-                          <div class="card-body">
-                            <strong>{{ reply.user.username }}</strong>
-                            <small class="text-muted">{{ reply.created_at|date:"M d, Y H:i" }}</small>
-                            <p class="mt-2">{{ reply.content }}</p>
-                          </div>
-                        </div>
-                        {% endfor %}
-                        {% if comment.user == user %}
-                        <form method="post" action="{% url 'delete_comment' event.id comment.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <div class="d-flex align-items-center gap-2 ms-3 mb-3">
-                        <button type="submit" class="btn btn-sm btn-outline-secondary">Reply</button>
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                        </div>
-                      </form>
-                    {% endif %}
-                      </div>
+                            <!-- Reply Form -->
+                            {% if user.is_authenticated %}
+                              <form method="post" class="reply-form ms-4 mt-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                <textarea name="content" class="form-control mb-2" rows="2" placeholder="Reply..."></textarea>
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Reply</button>
+                              </form>
+                            {% endif %}
+                        {% empty %}
+                        <p class="text-muted">No comments yet. Be the first to comment!</p>
+                      {% endfor %}
                     </div>
-                    {% empty %}
-                    <p class="text-muted">No comments yet. Be the first to comment!</p>
-                    {% endfor %}
-
 
                 </div>
             </div>
