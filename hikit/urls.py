@@ -21,11 +21,12 @@ urlpatterns = [
 
     # Events
     path('events/', views.event_list, name='event_list'),
-
     path('events/<int:event_id>/', views.event_detail, name='event_detail'),
-
     path('events/<int:event_id>/join/', views.join_event, name='join_event'),
     path('events/<int:event_id>/leave/', views.leave_event, name='leave_event'),
+    path('event/<int:event_id>/comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
+
+
 
     # User
     path('profile/', views.profile, name='profile'),
