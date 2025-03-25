@@ -19,9 +19,14 @@ def route_list(request):
     routes = Route.objects.all()
     return render(request, 'route_list.html', {'routes': routes})
 
+@login_required
 def route_detail(request, route_id):
-    route = get_object_or_404(Route, pk=route_id) # 根据主键寻找具体数据
-    return render(request, 'route.html', {'route': route})
+    route = get_object_or_404(Route, pk=route_id)
+    saved = request.user in route.saved_by.all()
+    return render(request, 'route.html', {
+        'route': route,
+        'saved': saved
+    })
 
 def create_event(request, route_id):
     route = get_object_or_404(Route, id=route_id)
@@ -228,3 +233,15 @@ def event_detail(request, event_id):
         'event': event,
         'participation': participation  # 关键参数
     })
+
+@login_required
+def toggle_save_route(request, route_id):
+    route = get_object_or_404(Route, id=route_id)
+    user = request.user
+    if user in route.saved_by.all():
+        route.saved_by.remove(user)
+        return JsonResponse({'saved': False})
+    else:
+        route.saved_by.add(user)
+        return JsonResponse({'saved': True})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
