@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event, Route, UserProfile
+from .models import Event, Route, UserProfile, EventComment
 from django.core.exceptions import ValidationError
 
 class RouteForm(forms.ModelForm):
@@ -52,4 +52,12 @@ class UserProfileForm(forms.ModelForm):
             if not picture.name.lower().endswith(('.jpg', '.jpeg', '.png')):
                 raise ValidationError("Only JPG/PNG images allowed")
         return picture
+
+class EventCommentForm(forms.ModelForm):
+    class Meta:
+        model = EventComment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Leave a comment...'})
+        }
 

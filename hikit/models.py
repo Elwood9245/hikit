@@ -13,6 +13,7 @@ STATUS_CHOICES = [
     ('canceled', 'Canceled'),
 ]
 
+
 class Route(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
@@ -24,7 +25,7 @@ class Route(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_routes')
     saved_by = models.ManyToManyField(User, related_name='saved_routes', blank=True)
     completed_by = models.ManyToManyField(User, related_name='past_routes', blank=True)
-    featured_image = models.ImageField(upload_to='route_images/', null=True, blank=True) # 这里的upload_to值得是需要上传到这个文件夹中
+    featured_image = models.ImageField(upload_to='route_images/', null=True, blank=True)  # 这里的upload_to值得是需要上传到这个文件夹中
 
     def __str__(self):
         return self.name
@@ -32,6 +33,7 @@ class Route(models.Model):
     def display_name(self):
         # <--!Dynamically generates formatted name without database storage-->
         return f"{self.name.title()} ({self.distance}km, {self.elevation_gain}m)"
+
 
 class Event(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name='events')
@@ -68,10 +70,23 @@ class Event(models.Model):
     def __str__(self):
         return f"{self.title} - {self.route.name}"
 
+class EventComment(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.event.title}"
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.get_or_create(user=instance)
+
+
 class Participation(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='participants')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='participations')
@@ -80,6 +95,7 @@ class Participation(models.Model):
 
     class Meta:
         unique_together = ('event', 'user')
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(

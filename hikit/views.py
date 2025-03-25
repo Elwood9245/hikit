@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Route, Event, Participation, UserProfile
-from .forms import RouteForm, EventForm, UserProfileForm
+from .models import Route, Event, Participation, UserProfile, EventComment
+from .forms import RouteForm, EventForm, UserProfileForm, EventCommentForm
 
 
 def home(request):
@@ -53,9 +53,58 @@ def event_list(request):
     return render(request, 'event_list.html', {'events': events})
 
 def event_detail(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-    return render(request, 'event_detail.html', {'event': event})
+    event = get_object_or_404(Event.objects.prefetch_related('participants'), id=event_id)
+    comments = event.comments.filter(parent__isnull=True).order_by('-created_at')
+    form = EventCommentForm()
+    participation = None
 
+    if request.user.is_authenticated:
+        # Check if the user has already joined this event
+        participation = Participation.objects.filter(event=event, user=request.user).first()
+
+        # Handle comment submission
+        if request.method == 'POST' and 'content' in request.POST:
+            form = EventCommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.user = request.user
+                comment.event = event
+
+                # Optional reply to parent comment
+                parent_id = request.POST.get('parent_id')
+                if parent_id:
+                    try:
+                        parent = EventComment.objects.get(id=parent_id, event=event)
+                        comment.parent = parent
+                    except EventComment.DoesNotExist:
+                        pass
+
+                comment.save()
+                print(comments)
+
+                # AJAX Response
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'Comment posted!',
+                        'comment_html': f'<p>{comment.user.username}: {comment.content}</p>'
+                    })
+
+                return redirect('event_detail', event_id=event.id)
+
+            # If form is invalid and it's an AJAX request
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'error': form.errors.as_json()
+                }, status=400)
+    # Final render
+    return render(request, 'event_detail.html', {
+        'event': event,
+        'form': form,
+        'comments': comments,
+        'participation': participation,
+    })
 def join_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST' and request.user.is_authenticated:
@@ -78,9 +127,6 @@ def leave_event(request, event_id):
             event.current_participants -= 1
             event.save()
     return redirect('event_detail', event.id)
-
-def profile(request):
-    return render(request, 'profile.html')
 
 def search(request):
     query = request.GET.get('q', '') # q为key对应的value为什么
@@ -220,21 +266,6 @@ def leave_event(request, event_id):
     return redirect('event_detail', event_id=event_id)
 
 
-def event_detail(request, event_id):
-    event = get_object_or_404(Event.objects.prefetch_related('participants'), id=event_id)
-    participation = None
-
-    if request.user.is_authenticated:
-        participation = Participation.objects.filter(
-            event=event,
-            user=request.user
-        ).first()
-
-    return render(request, 'event_detail.html', {
-        'event': event,
-        'participation': participation  # 关键参数
-    })
-
 @login_required
 def toggle_save_route(request, route_id):
     route = get_object_or_404(Route, id=route_id)
@@ -245,3 +276,15 @@ def toggle_save_route(request, route_id):
     else:
         route.saved_by.add(user)
         return JsonResponse({'saved': True})
+
+@login_required
+def delete_comment(request, event_id, comment_id):
+    comment = get_object_or_404(EventComment, id=comment_id, event__id=event_id)
+
+    # Only the comment author can delete
+    if comment.user != request.user:
+        return render("You are not allowed to delete this comment.")
+
+    comment.delete()
+    messages.success(request, "Comment deleted successfully.")
+    return redirect('event_detail', event_id=event_id)

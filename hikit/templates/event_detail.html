@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container">
     <div class="card shadow-sm p-5 mb-4">
-        <!-- 头部区域 -->
+        <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h1 class="h2 fw-bold">{{ event.title }}</h1>
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <!-- 活动信息 -->
+        <!-- Events Info -->
         <div class="row g-4 mb-5">
             <div class="col-md-8">
                 <div class="card border-0 bg-light">
@@ -74,10 +74,76 @@
                         <i class="bi bi-card-text me-2"></i>Description
                     </h3>
                     <div class="text-muted" style="white-space: pre-line;">{{ event.description }}</div>
+
+                    <hr class="my-4">
+
+                    <!-- Comment Form -->
+                    <div class="card shadow-sm mb-4">
+                      <div class="card-body">
+                        <h3 class="h5 mb-3"><i class="bi bi-chat-left-text me-2"></i>Leave a Comment</h3>
+                        {% if user.is_authenticated %}
+                        <form id="comment-form" method="post" action="{% url 'event_detail' event.id %}">
+                          {% csrf_token %}
+                          {{ form.as_p }}
+                          <button type="submit" class="btn comment-btn">
+                            <i class="bi bi-send me-1"></i> Post Comment
+                          </button>
+                        </form>
+                        <div id="comment-message" class="text-success mt-2" style="display: none;"></div>
+                        {% else %}
+                        <p class="text-muted">Please <a href="{% url 'login' %}?next={{ request.path }}">login</a> to leave a comment.</p>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    <!-- Display Comments -->
+                    {% for comment in comments %}
+                    <div class="card comment-card mb-3 ms-3">
+                      <div class="card-body">
+                        <strong>{{ comment.user.username }}</strong>
+                        <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+                        <p class="mt-2">{{ comment.content }}</p>
+
+                        <!-- Reply form (nested) -->
+                        {% if user.is_authenticated %}
+                        <form method="post" class="ms-3 reply-form">
+                          {% csrf_token %}
+                          <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                          <textarea name="content" class="form-control mb-2" rows="2" placeholder="Reply..."></textarea>
+
+                        </form>
+                        {% endif %}
+
+                        <!-- Display Replies & Delete Button Side-by-Side -->
+                        {% for reply in comment.replies.all %}
+                        <div class="card reply-card mt-3">
+                          <div class="card-body">
+                            <strong>{{ reply.user.username }}</strong>
+                            <small class="text-muted">{{ reply.created_at|date:"M d, Y H:i" }}</small>
+                            <p class="mt-2">{{ reply.content }}</p>
+                          </div>
+                        </div>
+                        {% endfor %}
+                        {% if comment.user == user %}
+                        <form method="post" action="{% url 'delete_comment' event.id comment.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <div class="d-flex align-items-center gap-2 ms-3 mb-3">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Reply</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </div>
+                      </form>
+                    {% endif %}
+                      </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No comments yet. Be the first to comment!</p>
+                    {% endfor %}
+
+
                 </div>
             </div>
 
-            <!-- 参与板块 -->
+            <!-- Participation Info -->
             <div class="col-md-4">
                 <div class="card border-0 bg-light">
                     <div class="card-body">
@@ -87,7 +153,7 @@
                         
                         {% if user.is_authenticated %}
                             {% if participation %}
-                            <!-- 已参加状态 -->
+                            <!-- Participated -->
                             <form method="post" action="{% url 'leave_event' event.id %}">
                                 {% csrf_token %}
                                 <div class="d-grid gap-2">
@@ -97,7 +163,7 @@
                                 </div>
                             </form>
                             {% else %}
-                            <!-- 未参加状态 -->
+                            <!-- Open-to-join -->
                             {% if event.can_join %}
                             <form method="post" action="{% url 'join_event' event.id %}">
                                 {% csrf_token %}
@@ -127,7 +193,7 @@
                         </div>
                         {% endif %}
 
-                        <!-- 参与者列表 -->
+                        <!-- Participants List  -->
                         {% if event.participants.exists %}
                         <div class="mt-4">
                             <h4 class="h6 mb-3">Participants ({{ event.participants.count }})</h4>
@@ -156,4 +222,9 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/event.js' %}">
+</script>
 {% endblock %}
