@@ -115,4 +115,4 @@ class UserProfile(models.Model):
     def picture_url(self):
         if self.profile_picture:
             return self.profile_picture.url
-        return '/static/image/tintin.png'  # Default avatar
+        return '/static/image/default_profile.png'  # Default avatar
