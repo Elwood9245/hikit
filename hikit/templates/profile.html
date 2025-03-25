@@ -7,29 +7,26 @@
   <div class="row">
 
 <!-- Left Profile Column -->
-<div class="col-md-3 text-center">
+<div class="col-md-2 profile-column">
   <!-- Form to update profile picture -->
   <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" id="profile-form">
     {% csrf_token %}
 
     <!-- Profile Picture Preview and Upload -->
-    <label for="profile-photo-upload" style="cursor: pointer;">
+    <label for="profile-photo-upload" class="profile-picture-wrapper">
       {% if user.profile.profile_picture %}
         <img src="{{ profile.picture_url }}"
-             class="rounded-circle mb-3"
+             class="profile-picture"
              alt="Profile Photo"
-             width="180"
-             height="180"
-             id="profile-preview"
-             style="object-fit: cover;">
-        <div class="text-muted small mt-2">Click to change photo</div>
+             id="profile-preview">
       {% else %}
-        <img src="{% static 'image/tintin.png' %}"
+        <img src="{% static 'image/default_profile.png' %}"
              class="rounded-circle mb-3"
              alt="Default"
              width="120"
              id="profile-preview">
       {% endif %}
+      <div class="text-muted small mt-2">Click to change photo</div>
     </label>
 
     <!-- Hidden file input triggered by clicking image -->
@@ -49,10 +46,10 @@
 
 
     <!-- Activities Section -->
-    <div class="col-md-9 d-flex flex-wrap gap-4" style="height: fit-content;">
+    <div class="col-md-10 d-flex flex-wrap justify-content-between align-items-start gap-3">
 
-      <!-- Launched Routes -->
-      <div class="card text-center flex-grow-1" style="min-width: 18rem; height: 100%;">
+        <!-- Launched Routes -->
+        <div class="profile-card text-center flex-fill" style="min-width: 200px; max-width: 22%;">
         <div class="card-header fw-bold" style="font-family: 'Poppins', sans-serif;
         font-size: 1.2rem;">My Routes</div>
         <div class="card-body d-flex flex-column">
@@ -72,11 +69,14 @@
                         {{ route.display_name }}
                     </div>
                 </a>
-               {% if route.featured_image %}
-                <a href="{% url 'route_detail' route_id=route.id %}">
-                  <img src="{{ route.featured_image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
-                </a>
-              {% endif %}
+                {% if route.featured_image %}
+                    <a href="{% url 'route_detail' route_id=route.id %}" class="text-decoration-none">
+                    <img src="{{ route.featured_image.url }}"
+                         class="card-img-thumbnail"
+                         alt="{{ route.title }}">
+                    </a>
+                {% endif %}
+
             </div>
             {% empty %}
               <p class="text-muted">No launched routes.</p>
@@ -92,8 +92,8 @@
         </div>
       </div>
 
-      <!-- Launched Events !-->
-      <div class="card text-center flex-grow-1" style="min-width: 18rem; height: 100%;">
+        <!-- Launched Events !-->
+        <div class="profile-card text-center flex-fill" style="min-width: 200px; max-width: 22%;">
         <div class="card-header fw-bold" style="font-family: 'Poppins', sans-serif;
         font-size: 1.2rem;">Launched Events</div>
         <div class="card-body d-flex flex-column">
@@ -109,15 +109,18 @@
             {% for event in launched_events %}
             <div class="event-item {% if not forloop.first %}d-none{% endif %}" data-index="{{ forloop.counter0 }}">
                 <a href="{% url 'event_detail' event_id=event.id %}" class="text-decoration-none">
-                    <div class="display-title">
+                    <div class="display-name mb-3">
                         {{ event.title }}
                     </div>
                 </a>
-              {% if event.image %}
-                <a href="{% url 'event_detail' event_id=event.id %}">
-                  <img src="{{ event.image.url }}" class="img-fluid rounded mb-2" alt="{{ event.title }}">
-                </a>
-              {% endif %}
+                {% if event.route.featured_image %}
+                    <a href="{% url 'event_detail' event_id=event.id %}" class="text-decoration-none">
+                        <img src="{{ event.route.featured_image.url }}"
+                       class="card-img-thumbnail mb-2"
+                       alt="{{ event.title }}">
+                    </a>
+                {% endif %}
+
             </div>
             {% empty %}
               <p class="text-muted">No launched events.</p>
@@ -133,8 +136,8 @@
         </div>
       </div>
 
-      <!-- Saved Routes -->
-      <div class="card text-center flex-grow-1" style="min-width: 18rem; height: 100%;">
+        <!-- Saved Routes ！-->
+        <div class="profile-card text-center flex-fill" style="min-width: 200px; max-width: 22%;">
         <div class="card-header fw-bold" style="font-family: 'Poppins', sans-serif;
         font-size: 1.2rem;">Saved Routes</div>
         <div class="card-body d-flex flex-column">
@@ -145,7 +148,7 @@
             &#x25B2;
           </button>
 
-          <!-- Saved Routes Display -->
+          <!-- Saved Routes Display ！ -->
           <div class="saved-container flex-grow-1">
           <p class="text-muted">You have {{ saved_routes|length }} saved route(s).</p>
 
@@ -153,12 +156,18 @@
             <div class="saved-item {% if not forloop.first %}d-none{% endif %}" data-index="{{ forloop.counter0 }}">
                 <a href="{% url 'route_detail' route_id=route.id %}" class="text-decoration-none">
                     <div class="display-name mb-3">
-                        {{ route.display_name }}
+                    {% if route.featured_image %}
+                        <img src="{{ route.featured_image.url }}"
+                             class="card-img-thumbnail"
+                             alt="{{ route.title }}">
+                    {% endif %}
                     </div>
                 </a>
               {% if route.image %}
                 <a href="{% url 'route_detail' route_id=route.id %}">
-                  <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
+                  <img src="{{ route.image.url }}"
+                       class="card-img-thumbnail rounded mb-2"
+                       alt="{{ route.title }}">
                 </a>
               {% endif %}
             </div>
@@ -176,119 +185,52 @@
         </div>
       </div>
 
+        <!-- Participated Events -->
+        <div class="profile-card text-center flex-fill" style="min-width: 200px; max-width: 22%;">
+          <div class="card-header fw-bold" style="font-family: 'Poppins', sans-serif;
+          font-size: 1.2rem;">Participated Events</div>
+          <div class="card-body d-flex flex-column">
+            <!-- Up arrow ▲ -->
+            <button class="btn btn-link mb-2 arrow-btn participated-prev"
+                    onclick="navigateRoute('participated', -1)"
+                    {% if participated_events|length <= 1 %}disabled{% endif %}>
+              &#x25B2;
+            </button>
+
+            <!-- Participated Events Display -->
+            <div class="participated-container flex-grow-1">
+              {% for event in participated_events %}
+              <div class="card-body participated-item {% if not forloop.first %}d-none{% endif %}" data-index="{{ forloop.counter0 }}">
+                <a href="{% url 'event_detail' event_id=event.id %}" class="text-decoration-none">
+                  <div class="display-name mb-3">{{ event.title }}</div>
+                </a>
+                {% if event.route.featured_image %}
+                  <img src="{{ event.route.featured_image.url }}"
+                       class="card-img-thumbnail mb-2"
+                       alt="{{ event.title }}">
+                {% endif %}
+              </div>
+              {% empty %}
+                <p class="text-muted">You have not participated in any events.</p>
+              {% endfor %}
+            </div>
+
+            <!-- Down arrow ▼ -->
+            <button class="btn btn-link mt-2 arrow-btn participated-next"
+                    onclick="navigateRoute('participated', 1)"
+                    {% if participated_events|length <= 1 %}disabled{% endif %}>
+              &#x25BC;
+            </button>
+          </div>
     </div>
+
+    </div>
+
   </div>
 </div>
-
-<style>
-  .arrow-btn {
-    font-size: 1.5rem;
-    color: #6c757d;
-    text-decoration: none;
-    background: none;
-    border: none;
-    padding: 0;
-  }
-  .arrow-btn:hover:not(:disabled) {
-    color: #0d6efd;
-    cursor: pointer;
-  }
- .arrow-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  .card {
-    flex: 1 1 300px; /* Grow, shrink, basis */
-  }
-</style>
 {% endblock %}
 
 {% block scripts %}
-<script>
-  /**
-   * Navigation function for card sections
-   */
-  function navigateRoute(type, direction) {
-     console.log(`navigateRoute triggered: type=${type}, direction=${direction}`);
-
-    const container = document.querySelector(`.${type}-container`);
-    const items = container.querySelectorAll(`.${type}-item`);
-    const prevBtn = document.querySelector(`.${type}-prev`);
-    const nextBtn = document.querySelector(`.${type}-next`);
-
-    if (!items.length) return;
-
-    let currentIndex = 0;
-    items.forEach((item, index) => {
-      if (!item.classList.contains('d-none')) {
-        currentIndex = index;
-      }
-    });
-
-    items[currentIndex].classList.add('d-none');
-    let newIndex = (currentIndex + direction + items.length) % items.length;
-    items[newIndex].classList.remove('d-none');
-
-    prevBtn.disabled = items.length <= 1;
-    nextBtn.disabled = items.length <= 1;
-  }
-
-  /**
-   * Upload profile picture
-   */
-// Live preview profile image when a new file is selected
-  const fileInput = document.getElementById('profile-photo-upload');
-  const previewImg = document.getElementById('profile-preview');
-  const profileForm = document.getElementById('profile-form');
-
-  if (fileInput && previewImg && profileForm) {
-    fileInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (!file) return;
-       // Basic validation
-      if (!file.type.startsWith('image/')) {
-        alert('Please select an image file(JPEG, PNG, etc.)');
-        return;
-      }
-
-       // Check file size (e.g., 5MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Image must be less than 5MB');
-        return;
-      }
-
-      // Create preview
- const reader = new FileReader();
-    reader.onload = function(e) {
-        // Show preview immediately
-        document.getElementById('profile-preview').src = e.target.result;
-
-        // Submit via AJAX
-        const formData = new FormData(document.getElementById('profile-form'));
-
-        fetch(window.location.href, {  // Or use profileForm.action
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',  // Critical for Django
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log(data.message);
-                // Optional: Update with server-processed URL
-                if (data.profile_picture_url) {
-                    document.getElementById('profile-preview').src = data.profile_picture_url;
-                }
-            } else {
-                console.error("Error:", data.error);
-            }
-        })
-        .catch(error => console.error("Network error:", error));
-    };
-    reader.readAsDataURL(file);
-    });
-  }
+<script src="{% static 'js/profile.js' %}">
 </script>
 {% endblock %}
