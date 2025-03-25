@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
+from django.core.files.storage import default_storage
 
 STATUS_CHOICES = [
     ('planning', 'Planning'),
@@ -25,6 +28,10 @@ class Route(models.Model):
 
     def __str__(self):
         return self.name
+
+    def display_name(self):
+        # <--!Dynamically generates formatted name without database storage-->
+        return f"{self.name.title()} ({self.distance}km, {self.elevation_gain}m)"
 
 class Event(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name='events')
@@ -61,6 +68,10 @@ class Event(models.Model):
     def __str__(self):
         return f"{self.title} - {self.route.name}"
 
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.get_or_create(user=instance)
 class Participation(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='participants')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='participations')
@@ -71,12 +82,37 @@ class Participation(models.Model):
         unique_together = ('event', 'user')
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    bio = models.TextField(blank=True)
-    hiking_experience = models.CharField(max_length=100, blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
-    phone_number = models.CharField(max_length=20, blank=True)
-    emergency_contact = models.TextField(blank=True)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    bio = models.TextField(
+        blank=True,
+        verbose_name="About Me",
+        help_text="Tell others about yourself"
+    )
+    profile_picture = models.ImageField(
+        upload_to='profile_pics/%Y/%m/%d/',
+        null=True,
+        blank=True,
+        verbose_name="Profile Photo",
+        help_text="Upload a square image (recommended 400x400px)"
+    )
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+    def save(self, *args, **kwargs):
+        # Delete old file when updating
+        if self.pk:
+            old_file = UserProfile.objects.get(pk=self.pk).profile_picture
+            if old_file and old_file != self.profile_picture:
+                default_storage.delete(old_file.path)
+        super().save(*args, **kwargs)
+
+    @property
+    def picture_url(self):
+        if self.profile_picture:
+            return self.profile_picture.url
+        return '/static/image/tintin.png'  # Default avatar
