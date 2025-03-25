@@ -15,7 +15,9 @@ urlpatterns = [
     path('routes/', views.route_list, name='route_list'),
     path('routes/<int:route_id>/', views.route_detail, name='route_detail'),
     path('routes/<int:route_id>/create-event/', views.create_event, name='create_event'),
+    path('routes/<int:route_id>/toggle-save/', views.toggle_save_route, name='toggle_save_route'),
     path('routes/add/', views.add_route, name='add_route'),
+
 
     # Events
     path('events/', views.event_list, name='event_list'),
