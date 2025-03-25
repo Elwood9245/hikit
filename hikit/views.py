@@ -19,10 +19,11 @@ def route_list(request):
     routes = Route.objects.all()
     return render(request, 'route_list.html', {'routes': routes})
 
-@login_required
 def route_detail(request, route_id):
     route = get_object_or_404(Route, pk=route_id)
-    saved = request.user in route.saved_by.all()
+    saved = False
+    if request.user.is_authenticated:
+        saved = request.user in route.saved_by.all()
     return render(request, 'route.html', {
         'route': route,
         'saved': saved
@@ -176,13 +177,13 @@ def profile(request):
     launched_routes = Route.objects.filter(created_by=user)
     launched_events = Event.objects.filter(organizer=user)
     saved_routes = user.saved_routes.all()  # Adjust depending on your model setup
-    past_routes = user.past_routes.all()    # Same here
+    participated_events = Event.objects.filter(participants__user=request.user)
 
     context = {
         'launched_routes': launched_routes,
         'launched_events': launched_events,
         'saved_routes': saved_routes,
-        'past_routes': past_routes,
+        'participated_events': participated_events,
         'profile': profile,
     }
     return render(request, 'profile.html', context)
@@ -244,4 +245,3 @@ def toggle_save_route(request, route_id):
     else:
         route.saved_by.add(user)
         return JsonResponse({'saved': True})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
