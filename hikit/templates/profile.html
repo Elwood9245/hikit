@@ -2,98 +2,291 @@
 {% load static %}
 
 {% block content %}
+<!-- ALL HTML CONTENT -->
 <div class="container-fluid mt-5">
   <div class="row">
 
-    <!-- Left Profile Column -->
-    <div class="col-md-3 text-center">
-      <img src="{% static 'image/tintin.png' %}" class="rounded-circle mb-3" alt="Profile Avatar" width="120">
-      <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-outline-dark w-75">Log out</button>
-      </form>
-    </div>
+<!-- Left Profile Column -->
+<div class="col-md-3 text-center">
+  <!-- Form to update profile picture -->
+  <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" id="profile-form">
+    {% csrf_token %}
+
+    <!-- Profile Picture Preview and Upload -->
+    <label for="profile-photo-upload" style="cursor: pointer;">
+      {% if user.profile.profile_picture %}
+        <img src="{{ profile.picture_url }}"
+             class="rounded-circle mb-3"
+             alt="Profile Photo"
+             width="180"
+             height="180"
+             id="profile-preview"
+             style="object-fit: cover;">
+        <div class="text-muted small mt-2">Click to change photo</div>
+      {% else %}
+        <img src="{% static 'image/tintin.png' %}"
+             class="rounded-circle mb-3"
+             alt="Default"
+             width="120"
+             id="profile-preview">
+      {% endif %}
+    </label>
+
+    <!-- Hidden file input triggered by clicking image -->
+    <input type="file"
+           name="profile_picture"
+           id="profile-photo-upload"
+           accept="image/*"
+           style="display: none;">
+  </form>
+
+  <!-- Logout Button -->
+  <form method="POST" action="{% url 'logout' %}" class="mt-3">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-dark w-75">Log out</button>
+  </form>
+</div>
+
 
     <!-- Activities Section -->
-    <div class="col-md-9 d-flex justify-content-around flex-wrap gap-4">
+    <div class="col-md-9 d-flex flex-wrap gap-4" style="height: fit-content;">
 
       <!-- Launched Routes -->
-      <div class="card text-center" style="width: 18rem;">
-        <div class="card-header fw-bold">My Routes</div>
-        <div class="card-body">
-          <div class="mb-2">&#x25B2;</div>  <!-- Up arrow ▲ -->
+      <div class="card text-center flex-grow-1" style="min-width: 18rem; height: 100%;">
+        <div class="card-header fw-bold" style="font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;">My Routes</div>
+        <div class="card-body d-flex flex-column">
+          <!-- Up arrow ▲ -->
+          <button class="btn btn-link mb-2 arrow-btn route-prev"
+                  onclick="navigateRoute('route', -1)"
+                  {% if launched_routes|length <= 1 %}disabled{% endif %}>
+            &#x25B2;
+          </button>
 
-         <!-- debug block -->
-         <p style="color: red;">Found {{ launched_routes|length }} launched route(s)</p>
+          <!-- My Route Display -->
+          <div class="route-container flex-grow-1">
+            {% for route in launched_routes %}
+            <div class="route-item {% if not forloop.first %}d-none{% endif %}" data-index="{{ forloop.counter0 }}">
+                <a href="{% url 'route_detail' route_id=route.id %}" class="text-decoration-none">
+                    <div class="display-name mb-3">
+                        {{ route.display_name }}
+                    </div>
+                </a>
+               {% if route.featured_image %}
+                <a href="{% url 'route_detail' route_id=route.id %}">
+                  <img src="{{ route.featured_image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
+                </a>
+              {% endif %}
+            </div>
+            {% empty %}
+              <p class="text-muted">No launched routes.</p>
+            {% endfor %}
+          </div>
 
-          {% for route in launched_routes %}
-            <p style="color: blue;">TITLE: {{ route.title }}</p>
-            <p>HAS IMAGE? {% if route.image %} ✅ {% else %} ❌ {% endif %}</p>
-
-
-            {% if route.image %}
-              <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
-            {% endif %}
-            <p>{{ route.title }}</p>
-          {% empty %}
-            <p class="text-muted">No launched routes.</p>
-          {% endfor %}
-          <div class="mt-2">&#x25BC;</div>  <!-- Down arrow ▼ -->
+          <!-- Down arrow ▼ !-->
+          <button class="btn btn-link mt-2 arrow-btn route-next"
+                  onclick="navigateRoute('route', 1)"
+                  {% if launched_routes|length <= 1 %}disabled{% endif %}>
+            &#x25BC;
+          </button>
         </div>
       </div>
 
-          <!-- Launched Events -->
-      <div class="card text-center" style="width: 18rem;">
-        <div class="card-header fw-bold">Launched Events</div>
-        <div class="card-body">
-          <div class="mb-2">&#x25B2;</div>  <!-- Up arrow ▲ -->
-          {% for event in launched_events %}
-            {% if event.image %}
-              <img src="{{ event.image.url }}" class="img-fluid rounded mb-2" alt="{{ event.title }}">
-            {% endif %}
-            <p>{{ event.title }}</p>
-          {% empty %}
-            <p class="text-muted">No launched events.</p>
-          {% endfor %}
-          <div class="mt-2">&#x25BC;</div>  <!-- Down arrow ▼ -->
+      <!-- Launched Events !-->
+      <div class="card text-center flex-grow-1" style="min-width: 18rem; height: 100%;">
+        <div class="card-header fw-bold" style="font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;">Launched Events</div>
+        <div class="card-body d-flex flex-column">
+          <!-- Up arrow ▲ -->
+          <button class="btn btn-link mb-2 arrow-btn event-prev"
+                  onclick="navigateRoute('event', -1)"
+                  {% if launched_events|length <= 1 %}disabled{% endif %}>
+            &#x25B2;
+          </button>
+
+          <!-- Event Display -->
+          <div class="event-container flex-grow-1">
+            {% for event in launched_events %}
+            <div class="event-item {% if not forloop.first %}d-none{% endif %}" data-index="{{ forloop.counter0 }}">
+                <a href="{% url 'event_detail' event_id=event.id %}" class="text-decoration-none">
+                    <div class="display-title">
+                        {{ event.title }}
+                    </div>
+                </a>
+              {% if event.image %}
+                <a href="{% url 'event_detail' event_id=event.id %}">
+                  <img src="{{ event.image.url }}" class="img-fluid rounded mb-2" alt="{{ event.title }}">
+                </a>
+              {% endif %}
+            </div>
+            {% empty %}
+              <p class="text-muted">No launched events.</p>
+            {% endfor %}
+          </div>
+
+          <!-- Down arrow ▼ -->
+          <button class="btn btn-link mt-2 arrow-btn event-next"
+                  onclick="navigateRoute('event', 1)"
+                  {% if launched_events|length <= 1 %}disabled{% endif %}>
+            &#x25BC;
+          </button>
         </div>
       </div>
 
       <!-- Saved Routes -->
-      <div class="card text-center" style="width: 18rem;">
-        <div class="card-header fw-bold">Saved Routes</div>
-        <div class="card-body">
-          <div class="mb-2">&#x25B2;</div>
-          {% for route in saved_routes %}
-            {% if route.image %}
-              <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
-              <p>{{ route.title }}</p>
-            {% endif %}
-          {% empty %}
-            <p class="text-muted">No saved activities.</p>
-          {% endfor %}
-          <div class="mt-2">&#x25BC;</div>
-        </div>
-      </div>
+      <div class="card text-center flex-grow-1" style="min-width: 18rem; height: 100%;">
+        <div class="card-header fw-bold" style="font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;">Saved Routes</div>
+        <div class="card-body d-flex flex-column">
+          <!-- Up arrow ▲ -->
+          <button class="btn btn-link mb-2 arrow-btn saved-prev"
+                  onclick="navigateRoute('saved', -1)"
+                  {% if saved_routes|length <= 1 %}disabled{% endif %}>
+            &#x25B2;
+          </button>
 
-      <!-- Past Activities -->
-      <div class="card text-center" style="width: 18rem;">
-        <div class="card-header fw-bold">Past Activities</div>
-        <div class="card-body">
-          <div class="mb-2">&#x25B2;</div>
-          {% for route in past_routes %}
-            {% if route.image %}
-              <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
-              <p>{{ route.title }}</p>
-            {% endif %}
-          {% empty %}
-            <p class="text-muted">No past activities.</p>
-          {% endfor %}
-          <div class="mt-2">&#x25BC;</div>
+          <!-- Saved Routes Display -->
+          <div class="saved-container flex-grow-1">
+            {% for route in saved_routes %}
+            <div class="saved-item {% if not forloop.first %}d-none{% endif %}" data-index="{{ forloop.counter0 }}">
+                <a href="{% url 'route_detail' route_id=route.id %}" class="text-decoration-none">
+                    <div class="display-name mb-3">
+                        {{ route.display_name }}
+                    </div>
+                </a>
+              {% if route.image %}
+                <a href="{% url 'route_detail' route_id=route.id %}">
+                  <img src="{{ route.image.url }}" class="img-fluid rounded mb-2" alt="{{ route.title }}">
+                </a>
+              {% endif %}
+            </div>
+            {% empty %}
+              <p class="text-muted">No saved activities.</p>
+            {% endfor %}
+          </div>
+
+          <!-- Down arrow ▼ -->
+          <button class="btn btn-link mt-2 arrow-btn saved-next"
+                  onclick="navigateRoute('saved', 1)"
+                  {% if saved_routes|length <= 1 %}disabled{% endif %}>
+            &#x25BC;
+          </button>
         </div>
       </div>
 
     </div>
   </div>
 </div>
+
+<style>
+  .arrow-btn {
+    font-size: 1.5rem;
+    color: #6c757d;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .arrow-btn:hover:not(:disabled) {
+    color: #0d6efd;
+    cursor: pointer;
+  }
+ .arrow-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .card {
+    flex: 1 1 300px; /* Grow, shrink, basis */
+  }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  /**
+   * Navigation function for card sections
+   */
+  function navigateRoute(type, direction) {
+     console.log(`navigateRoute triggered: type=${type}, direction=${direction}`);
+
+    const container = document.querySelector(`.${type}-container`);
+    const items = container.querySelectorAll(`.${type}-item`);
+    const prevBtn = document.querySelector(`.${type}-prev`);
+    const nextBtn = document.querySelector(`.${type}-next`);
+
+    if (!items.length) return;
+
+    let currentIndex = 0;
+    items.forEach((item, index) => {
+      if (!item.classList.contains('d-none')) {
+        currentIndex = index;
+      }
+    });
+
+    items[currentIndex].classList.add('d-none');
+    let newIndex = (currentIndex + direction + items.length) % items.length;
+    items[newIndex].classList.remove('d-none');
+
+    prevBtn.disabled = items.length <= 1;
+    nextBtn.disabled = items.length <= 1;
+  }
+
+  /**
+   * Upload profile picture
+   */
+// Live preview profile image when a new file is selected
+  const fileInput = document.getElementById('profile-photo-upload');
+  const previewImg = document.getElementById('profile-preview');
+  const profileForm = document.getElementById('profile-form');
+
+  if (fileInput && previewImg && profileForm) {
+    fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+       // Basic validation
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file(JPEG, PNG, etc.)');
+        return;
+      }
+
+       // Check file size (e.g., 5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image must be less than 5MB');
+        return;
+      }
+
+      // Create preview
+ const reader = new FileReader();
+    reader.onload = function(e) {
+        // Show preview immediately
+        document.getElementById('profile-preview').src = e.target.result;
+
+        // Submit via AJAX
+        const formData = new FormData(document.getElementById('profile-form'));
+
+        fetch(window.location.href, {  // Or use profileForm.action
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // Critical for Django
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                // Optional: Update with server-processed URL
+                if (data.profile_picture_url) {
+                    document.getElementById('profile-preview').src = data.profile_picture_url;
+                }
+            } else {
+                console.error("Error:", data.error);
+            }
+        })
+        .catch(error => console.error("Network error:", error));
+    };
+    reader.readAsDataURL(file);
+    });
+  }
+</script>
 {% endblock %}
