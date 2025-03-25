@@ -1,0 +1,16 @@
+<div class="card reply-card mt-3 ms-4">
+  <div class="card-body">
+    <strong>{{ reply.user.username }}</strong>
+    <small class="text-muted">{{ reply.created_at|date:"M d, Y H:i" }}</small>
+    <p class="mt-2">{{ reply.content }}</p>
+
+    {% if user == reply.user %}
+    <div class="d-flex gap-2">
+      <form method="post" action="{% url 'delete_comment' event.id reply.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</div>

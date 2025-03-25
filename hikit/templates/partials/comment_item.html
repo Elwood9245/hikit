@@ -1,0 +1,14 @@
+<div class="card comment-card mb-3 ms-3">
+  <div class="card-body">
+    <strong>{{ comment.user.username }}</strong>
+    <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+    <p class="mt-2">{{ comment.content }}</p>
+
+    {% if user == comment.user %}
+    <form method="post" action="{% url 'delete_comment' event.id comment.id %}" class="mt-2">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
