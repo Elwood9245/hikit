@@ -22,13 +22,8 @@ class EventForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['bio', 'profile_picture']
+        fields = ['profile_picture']
         widgets = {
-            'bio': forms.Textarea(attrs={
-                'rows': 3,
-                'class': 'form-control',
-                'placeholder': 'Share something about yourself...'
-            }),
             'profile_picture': forms.FileInput(attrs={
                 'class': 'form-control',
                 'accept': 'image/*'
@@ -41,8 +36,6 @@ class UserProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if self.user:
-            self.fields['bio'].initial = self.user.profile.bio if hasattr(self.user, 'profile') else ''
 
     def clean_profile_picture(self):
         picture = self.cleaned_data.get('profile_picture')

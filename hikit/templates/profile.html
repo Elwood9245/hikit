@@ -72,7 +72,7 @@
                 {% if route.featured_image %}
                     <a href="{% url 'route_detail' route_id=route.id %}" class="text-decoration-none">
                     <img src="{{ route.featured_image.url }}"
-                         class="card-img-thumbnail"
+                         class="card-img-thumbnail mb-2"
                          alt="{{ route.title }}">
                     </a>
                 {% endif %}

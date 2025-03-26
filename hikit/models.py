@@ -32,7 +32,7 @@ class Route(models.Model):
 
     def display_name(self):
         # <--!Dynamically generates formatted name without database storage-->
-        return f"{self.name.title()} ({self.distance}km, {self.elevation_gain}m)"
+        return f"{self.name.title()} {self.distance}km | {self.elevation_gain}m"
 
 
 class Event(models.Model):
@@ -103,13 +103,8 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name='profile'
     )
-    bio = models.TextField(
-        blank=True,
-        verbose_name="About Me",
-        help_text="Tell others about yourself"
-    )
     profile_picture = models.ImageField(
-        upload_to='profile_pics/%Y/%m/%d/',
+        upload_to='profile_pics',
         null=True,
         blank=True,
         verbose_name="Profile Photo",
