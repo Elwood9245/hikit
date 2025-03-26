@@ -179,7 +179,7 @@
     "pk": 6,
     "fields": {
       "user": 4,
-      "profile_picture": "profile_pics/avatar-2.png"
+      "profile_picture": "profile_pics/avatar-6.png"
     }
   },
   {
@@ -208,7 +208,7 @@
       "date": "2025-04-15T10:00:00Z",
       "max_participants": 10,
       "current_participants": 0,
-      "status": "open",
+      "status": "planning",
       "created_at": "2025-03-25T13:40:00.000Z",
       "updated_at": "2025-03-25T13:40:00.000Z"
     }
@@ -282,10 +282,72 @@
       "created_at": "2025-03-25T13:30:00.000Z",
       "updated_at": "2025-03-25T13:30:00.000Z"
     }
+  },
+  {
+    "model": "hikit.event",
+    "pk": 6,
+    "fields": {
+      "route": 6,
+      "organizer": 5,
+      "title": "Spring Hike at Malvern Hills",
+      "description": "Join us for a refreshing spring hike along the ridge of Malvern Hills. Great company, great views!",
+      "date": "2025-04-20T10:00:00Z",
+      "status": "completed",
+      "created_at": "2025-03-26T10:30:00Z",
+      "updated_at": "2025-03-26T10:30:00Z"
+    }
+  },
+
+  {
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+      "username": "Jo",
+      "password": "pbkdf2_sha256$600000$DUMMY$WcCbmZAwNc6XVOegv9JBB9ZV9z2xqtS1rrYtOb+n5mo=",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-03-26T00:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "hikit.userprofile",
+    "pk": 8,
+    "fields": {
+      "user": 6,
+      "profile_picture": "profile_pics/avatar-4.png"
+    }
+  },
+  {
+    "model": "hikit.route",
+    "pk": 6,
+    "fields": {
+      "name": "Malvern Hills Trail",
+      "description": "A scenic hike along the spine of the Malvern Hills, with sweeping views across Herefordshire and Worcestershire. Ideal for nature lovers and history seekers.",
+      "distance": "13.5",
+      "elevation_gain": 670,
+      "difficulty": "Moderate",
+      "created_at": "2025-03-26T10:00:00Z",
+      "updated_at": "2025-03-26T10:00:00Z",
+      "created_by": 6,
+      "featured_image": "route_images/malvern_hills.jpg"
+    }
+  },
+  {
+    "model": "hikit.route",
+    "pk": 7,
+    "fields": {
+      "name": "Seven Sisters Cliff Walk",
+      "description": "Walk along England’s most famous white chalk cliffs. This coastal route features stunning sea views, rolling hills, and charming countryside vibes.",
+      "distance": "9.8",
+      "elevation_gain": 420,
+      "difficulty": "Easy",
+      "created_at": "2025-03-26T11:00:00Z",
+      "updated_at": "2025-03-26T11:00:00Z",
+      "created_by": 6,
+      "featured_image": "route_images/seven_sisters.jpg"
+    }
   }
-
-
-
-
-
 ]
