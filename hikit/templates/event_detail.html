@@ -84,7 +84,12 @@
                         {% if user.is_authenticated %}
                         <form id="comment-form" method="post" action="{% url 'event_detail' event.id %}">
                           {% csrf_token %}
-                          {{ form.as_p }}
+                          <div class="mb-3">
+                          {{ form.content }}
+                          {% if form.content.errors %}
+                            <div class="text-danger">{{ form.content.errors }}</div>
+                          {% endif %}
+                         </div>
                           <button type="submit" class="btn comment-btn">
                             <i class="bi bi-send me-1"></i> Post Comment
                           </button>
@@ -114,8 +119,6 @@
                                 <button type="submit" class="btn btn-sm btn-outline-secondary">Reply</button>
                               </form>
                             {% endif %}
-                        {% empty %}
-                        <p class="text-muted">No comments yet. Be the first to comment!</p>
                       {% endfor %}
                     </div>
 
