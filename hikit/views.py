@@ -54,7 +54,7 @@ def event_list(request):
     events = Event.objects.all()
     return render(request, 'event_list.html', {'events': events})
 
-@login_required
+
 def event_detail(request, event_id):
     event = get_object_or_404(Event.objects.prefetch_related('participants'), id=event_id)
     comments = event.comments.filter(parent__isnull=True).order_by('-created_at')
