@@ -92,7 +92,7 @@
       "model": "hikit.route",
       "pk": 3,
       "fields": {
-          "name": "Cape-Wrath-Scotland",
+          "name": "Cape Wrath Scotland",
           "description": "The Cape Wrath Trail is one of Scotland’s most challenging and rewarding long-distance walks, offering rugged terrain and stunning views.",
           "distance": "14.5",
           "elevation_gain": 1300,
@@ -152,8 +152,8 @@
       "description": "Join us for a scenic hike across Llanddwyn Island, explore its historical landmarks, enjoy the coastal views, and make unforgettable memories!",
       "date": "2025-04-05T09:00:00.000Z",
       "max_participants": 6,
-      "current_participants": 0,
-      "status": "open",
+      "current_participants": 2,
+      "status": "planning",
       "created_at": "2025-03-25T13:40:00.000Z",
       "updated_at": "2025-03-25T13:40:00.000Z"
     }
@@ -206,9 +206,9 @@
       "title": "Loch Lomond Hiking Adventure",
       "description": "Join us for a hike around Loch Lomond. A chance to experience one of Scotland's most stunning locations while enjoying nature and fresh air.",
       "date": "2025-04-15T10:00:00Z",
-      "max_participants": 10,
-      "current_participants": 0,
-      "status": "planning",
+      "max_participants": 3,
+      "current_participants": 3,
+      "status": "full",
       "created_at": "2025-03-25T13:40:00.000Z",
       "updated_at": "2025-03-25T13:40:00.000Z"
     }
@@ -277,8 +277,8 @@
       "description": "Join us for a scenic hike to the top of Conic Hill and enjoy breathtaking views of Loch Lomond.",
       "date": "2025-05-01T08:00:00Z",
       "max_participants": 5,
-      "current_participants": 0,
-      "status": "open",
+      "current_participants": 1,
+      "status": "planning",
       "created_at": "2025-03-25T13:30:00.000Z",
       "updated_at": "2025-03-25T13:30:00.000Z"
     }
@@ -292,7 +292,9 @@
       "title": "Spring Hike at Malvern Hills",
       "description": "Join us for a refreshing spring hike along the ridge of Malvern Hills. Great company, great views!",
       "date": "2025-04-20T10:00:00Z",
-      "status": "completed",
+      "status": "planning",
+      "max_participants": 10,
+      "current_participants": 2,
       "created_at": "2025-03-26T10:30:00Z",
       "updated_at": "2025-03-26T10:30:00Z"
     }
@@ -303,7 +305,7 @@
     "pk": 6,
     "fields": {
       "username": "Jo",
-      "password": "pbkdf2_sha256$600000$DUMMY$WcCbmZAwNc6XVOegv9JBB9ZV9z2xqtS1rrYtOb+n5mo=",
+      "password": "pbkdf2_sha256$600000$63eB7HcJfCNqLuztYEjRxS$/8iKhMM7zKW5Ic+d/WzJf6NjNqXu5L1/qgZ/5X3H9m0=",
       "is_superuser": false,
       "is_staff": false,
       "is_active": true,
@@ -349,5 +351,52 @@
       "created_by": 6,
       "featured_image": "route_images/seven_sisters.jpg"
     }
+  },
+
+  {
+  "model": "hikit.participation",
+  "pk": 1,
+  "fields": {
+    "event": 4,
+    "user": 6,
+    "joined_at": "2025-03-26T12:30:00Z"
   }
+},
+  {
+  "model": "hikit.participation",
+  "pk": 2,
+  "fields": {
+    "event": 4,
+    "user": 2,
+    "joined_at": "2025-03-26T12:30:00Z"
+  }
+},
+  {
+  "model": "hikit.participation",
+  "pk": 3,
+  "fields": {
+    "event": 4,
+    "user": 1,
+    "joined_at": "2025-03-26T12:30:00Z"
+  }
+},
+  {
+  "model": "hikit.participation",
+  "pk": 4,
+  "fields": {
+    "event": 6,
+    "user": 5,
+    "joined_at": "2025-03-26T12:30:00Z"
+  }
+},
+  {
+  "model": "hikit.participation",
+  "pk": 5,
+  "fields": {
+    "event": 8,
+    "user": 4,
+    "joined_at": "2025-03-26T12:30:00Z"
+  }
+}
+
 ]
