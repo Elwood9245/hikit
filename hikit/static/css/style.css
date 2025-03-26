@@ -204,9 +204,6 @@ textarea {
   border-radius: 0.4rem;
 }
 
-button[type="submit"] {
-  border-radius: 0.8rem;
-}
 
 .comment-btn {
   background-color: #3A6289; /* dark green */

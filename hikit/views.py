@@ -1,3 +1,5 @@
+
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -5,14 +7,18 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 from .models import Route, Event, Participation, UserProfile, EventComment
 from .forms import RouteForm, EventForm, UserProfileForm, EventCommentForm
 
 
 def home(request):
-    routes = Route.objects.all().order_by('-created_at')
-    return render(request, 'home.html', {'routes': routes})
+    context = {
+        'featured_routes': Route.objects.order_by('-created_at')[:3],
+        'recent_events': Event.objects.filter(date__gte=timezone.now()).order_by('-created_at')[:3]
+    }
+    return render(request, 'home.html', context)
 
 def about(request):
     return render(request, 'about.html')

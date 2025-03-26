@@ -1,32 +1,113 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Home - Hikit Trails{% endblock %}
+{% block title %}Welcome to Hikit{% endblock %}
 
 {% block content %}
-<div class="row row-cols-1 row-cols-md-2 g-4">
-    {% for route in routes %}
-    <div class="col">
-        <div class="card shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="card-title mb-0">{{ route.title }}</h5>
-                <small class="text-muted">by {{ route.author.username }}</small>
+<div class="container">
+    <!-- Hero Section -->
+    <div class="card shadow-sm p-5 mb-4">
+        <div class="row h-100 align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-4 text-dark">
+                    Discover Your Next Adventure
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Explore hiking routes, join community events, and track your outdoor achievements.
+                    Start your journey with thousands of hiking enthusiasts worldwide.
+                </p>
             </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between mb-3">
-                    <span class="badge bg-primary">{{ route.get_difficulty_display }}</span>
-                    <span class="text-muted">{{ route.distance }} km</span>
-                </div>
-                <p class="card-text">{{ route.description|truncatechars:150 }}</p>
-            </div>
-            <div class="card-footer bg-white">
-                <small class="text-muted">Posted {{ route.created_at|timesince }} ago</small>
+            <div class="col-md-4 text-center">
+                <i class="bi bi-mountain text-muted" style="font-size: 8rem;"></i>
             </div>
         </div>
     </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="alert alert-info">No hiking routes found. Be the first to add one!</div>
+
+    <!-- Featured Routes -->
+    <div class="card shadow-sm p-5 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h3 fw-bold text-dark">
+                <i class="bi bi-stars me-2"></i>Featured Routes
+            </h2>
+            <a href="{% url 'route_list' %}" class="btn btn-outline-dark">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for route in featured_routes %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    {% if route.featured_image %}
+                    <img src="{{ route.featured_image.url }}" class="card-img-top" alt="{{ route.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-image text-white fs-1"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="h5 card-title mb-3">
+                            <a href="{% url 'route_detail' route.id %}" class="text-decoration-none text-dark">
+                                {{ route.name }}
+                            </a>
+                        </h3>
+                        <div class="text-muted small mb-3">
+                            <i class="bi bi-geo-alt me-1"></i>{{ route.location|default:"Location not specified" }}
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted">
+                            <span><i class="bi bi-signpost-split me-1"></i>{{ route.distance }} km</span>
+                            <span><i class="bi bi-graph-up me-1"></i>{{ route.elevation_gain }} m</span>
+                            <span><i class="bi bi-activity me-1"></i>{{ route.difficulty }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-    {% endfor %}
+
+    <!-- Recent Events -->
+    <div class="card shadow-sm p-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h3 fw-bold text-dark">
+                <i class="bi bi-clock-history me-2"></i>Recent Events
+            </h2>
+            <a href="{% url 'event_list' %}" class="btn btn-outline-dark">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for event in recent_events %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h5 card-title mb-3">
+                            <a href="{% url 'event_detail' event.id %}" class="text-decoration-none text-dark">
+                                {{ event.title }}
+                            </a>
+                        </h3>
+                        <div class="text-muted small mb-3">
+                            <i class="bi bi-signpost me-1"></i>{{ event.route.name }}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-muted small">
+                                <i class="bi bi-calendar-event me-1"></i>
+                                {{ event.date|date:"M j, Y" }}
+                            </div>
+                            <span class="badge bg-dark rounded-pill">
+                                {{ event.current_participants }}/{{ event.max_participants }}
+                            </span>
+                        </div>
+                        <div class="mt-3 text-muted small">
+                            <i class="bi bi-person-circle me-1"></i>
+                            Organized by {{ event.organizer.username }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}
