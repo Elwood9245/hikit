@@ -64,5 +64,228 @@
       "created_by": 3,
       "featured_image": "route_images/unilib.jpeg"
     }
+  },
+
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "username": "Emma",
+        "password": "pbkdf2_sha256$600000$63eB7HcJfCNqLuztYEjRxS$/8iKhMM7zKW5Ic+d/WzJf6NjNqXu5L1/qgZ/5X3H9m0=",
+        "last_login": "2025-03-25T13:08:23.559Z",
+        "is_superuser": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-03-25T17:41:41.556Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+  {
+        "model": "hikit.userprofile",
+        "pk": 4,
+        "fields": {
+            "user": 1,
+            "profile_picture": "profile_pics/avatar-1.png"
+        }},
+  {
+      "model": "hikit.route",
+      "pk": 3,
+      "fields": {
+          "name": "Cape-Wrath-Scotland",
+          "description": "The Cape Wrath Trail is one of Scotland’s most challenging and rewarding long-distance walks, offering rugged terrain and stunning views.",
+          "distance": "14.5",
+          "elevation_gain": 1300,
+          "difficulty": "Hard",
+          "created_at": "2025-03-25T13:30:00.000Z",
+          "updated_at": "2025-03-25T13:30:00.000Z",
+          "created_by": 1,
+          "featured_image": "route_images/cape-wrath-scotland.jpg"
+      }
+  },
+
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "Robin",
+      "password": "pbkdf2_sha256$600000$63eB7HcJfCNqLuztYEjRxS$/8iKhMM7zKW5Ic+d/WzJf6NjNqXu5L1/qgZ/5X3H9m0=",
+      "last_login": "2025-03-25T13:08:23.559Z",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-03-25T17:41:41.556Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "hikit.userprofile",
+    "pk": 5,
+    "fields": {
+      "user": 2,
+      "profile_picture": "profile_pics/avatar-2.png"
+    }
+  },
+  {
+    "model": "hikit.route",
+    "pk": 4,
+    "fields": {
+      "name": "Loch Lomond",
+      "description": "Loch Lomond is one of the most beautiful and tranquil areas in Scotland. A perfect hiking route for nature lovers and adventure seekers alike.",
+      "distance": 15.0,
+      "elevation_gain": 500,
+      "difficulty": "Moderate",
+      "created_at": "2025-03-25T13:30:00.000Z",
+      "updated_at": "2025-03-25T13:30:00.000Z",
+      "created_by": 2,
+      "featured_image": "route_images/loch_lomond.jpg"
+    }
+  },
+  {
+      "model": "hikit.event",
+      "pk": 8,
+      "fields": {
+      "route": 7,
+      "organizer": 2,
+      "title": "Llanddwyn Island Hiking Adventure",
+      "description": "Join us for a scenic hike across Llanddwyn Island, explore its historical landmarks, enjoy the coastal views, and make unforgettable memories!",
+      "date": "2025-04-05T09:00:00.000Z",
+      "max_participants": 6,
+      "current_participants": 0,
+      "status": "open",
+      "created_at": "2025-03-25T13:40:00.000Z",
+      "updated_at": "2025-03-25T13:40:00.000Z"
+    }
+  },
+
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "username": "Edward",
+      "password": "pbkdf2_sha256$600000$63eB7HcJfCNqLuztYEjRxS$/8iKhMM7zKW5Ic+d/WzJf6NjNqXu5L1/qgZ/5X3H9m0=",
+      "last_login": "2025-03-25T13:08:23.559Z",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-03-25T17:41:41.556Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "hikit.userprofile",
+    "pk": 6,
+    "fields": {
+      "user": 4,
+      "profile_picture": "profile_pics/avatar-2.png"
+    }
+  },
+  {
+    "model": "hikit.route",
+    "pk": 7,
+    "fields": {
+      "name": "Llanddwyn Island",
+      "description": "Llanddwyn Island, located off the coast of Anglesey, offers stunning coastal views, sandy beaches, and a rich history tied to Welsh mythology.",
+      "distance": "5.0",
+      "elevation_gain": 300,
+      "difficulty": "Medium",
+      "created_at": "2025-03-25T13:30:00.000Z",
+      "updated_at": "2025-03-25T13:30:00.000Z",
+      "created_by": 4,
+      "featured_image": "route_images/llanddwyn-Island-anglesey.jpg"
+    }
+  },
+  {
+      "model": "hikit.event",
+      "pk": 4,
+      "fields": {
+      "route": 4,
+      "organizer": 4,
+      "title": "Loch Lomond Hiking Adventure",
+      "description": "Join us for a hike around Loch Lomond. A chance to experience one of Scotland's most stunning locations while enjoying nature and fresh air.",
+      "date": "2025-04-15T10:00:00Z",
+      "max_participants": 10,
+      "current_participants": 0,
+      "status": "open",
+      "created_at": "2025-03-25T13:40:00.000Z",
+      "updated_at": "2025-03-25T13:40:00.000Z"
+    }
+  },
+
+  {
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+      "username": "Sam",
+      "password": "pbkdf2_sha256$600000$63eB7HcJfCNqLuztYEjRxS$/8iKhMM7zKW5Ic+d/WzJf6NjNqXu5L1/qgZ/5X3H9m0=",
+      "last_login": "2025-03-25T13:08:23.559Z",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-03-25T17:41:41.556Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "hikit.userprofile",
+    "pk": 7,
+    "fields": {
+      "user": 5,
+      "profile_picture": "profile_pics/avatar-5.png"
+    }
+  },
+  {
+    "model": "hikit.route",
+    "pk": 5,
+    "fields": {
+      "name": "Conic Hill",
+      "description": "Conic Hill is a popular hill located in the Loch Lomond and The Trossachs National Park, Scotland. It provides a panoramic view of the surrounding area.",
+      "distance": 4.2,
+      "elevation_gain": 300,
+      "difficulty": "Moderate",
+      "created_at": "2025-03-25T13:30:00.000Z",
+      "updated_at": "2025-03-25T13:30:00.000Z",
+      "created_by": 5,
+      "featured_image": "route_images/conic_hill.jpg"
+    }
+  },
+  {
+      "model": "hikit.route",
+      "pk": 6,
+      "fields": {
+        "name": "Peak District",
+        "description": "The Peak District is one of the most popular national parks in the UK, known for its stunning landscapes, beautiful valleys, and ancient woodlands.",
+        "distance": 10.0,
+        "elevation_gain": 500,
+        "difficulty": "Moderate",
+        "created_at": "2025-03-25T14:10:00.000Z",
+        "updated_at": "2025-03-25T14:10:00.000Z",
+        "created_by": 5,
+        "featured_image": "route_images/PeakDistrict.jpg"
+      }
+    },
+  {
+    "model": "hikit.event",
+    "pk": 5,
+    "fields": {
+      "route": 5,
+      "organizer": 5,
+      "title": "Conic Hill Hike",
+      "description": "Join us for a scenic hike to the top of Conic Hill and enjoy breathtaking views of Loch Lomond.",
+      "date": "2025-05-01T08:00:00Z",
+      "max_participants": 5,
+      "current_participants": 0,
+      "status": "open",
+      "created_at": "2025-03-25T13:30:00.000Z",
+      "updated_at": "2025-03-25T13:30:00.000Z"
+    }
   }
+
+
+
+
+
 ]
