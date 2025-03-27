@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <!-- 头部区域 -->
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="display-4 fw-bold">{{ route.name }}</h1>
         {% if user.is_authenticated %}
@@ -26,7 +26,7 @@
     </div>
 
     <div class="row g-4">
-        <!-- 左侧图片和基本信息 -->
+        <!-- Image & Basic info -->
         <div class="col-md-6">
             <div class="card shadow-sm h-100">
                 {% if route.featured_image %}

@@ -21,7 +21,7 @@
                 <span class="h2 mb-0">HIKIT</span>
             </a>
 
-            <!-- 移动端折叠按钮 -->
+            <!-- Toggle button on sm screen -->
             <button class="navbar-toggler ms-auto" type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#mainNav"
@@ -31,9 +31,9 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- 导航内容 -->
+            <!-- Navbar -->
             <div class="collapse navbar-collapse" id="mainNav">
-                <!-- 左侧导航项 -->
+                <!-- left side -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                      <li class="nav-item">
                         <a class="nav-link px-3" href="{% url 'about' %}">About</a>
@@ -61,11 +61,9 @@
                     </div>
                 </form>
 
-                <!-- 用户操作区域 -->
                 <div class="d-flex align-items-center gap-2">
                     {% if user.is_authenticated %}
 
-                        <!-- 桌面端用户菜单 -->
                         <div class="dropdown d-none d-lg-block">
                             <a class="btn btn-light dropdown-toggle"
                                href="#" role="button"
@@ -85,7 +83,6 @@
                             </ul>
                         </div>
 
-                        <!-- 移动端用户菜单 -->
                         <div class="d-lg-none">
                             <hr class="dropdown-divider">
                             <div class="px-3 py-2">
@@ -102,13 +99,13 @@
                             </div>
                         </div>
                     {% else %}
-                        <!-- 未登录状态 -->
+                        <!-- User without logging in -->
                         <div class="d-none d-lg-flex gap-2">
                             <a href="{% url 'register' %}" class="btn btn-light">Register</a>
                             <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
                         </div>
 
-                        <!-- 移动端按钮组 -->
+                        <!-- button in sm screen -->
                         <div class="d-lg-none">
                             <div class="d-flex flex-column gap-2 w-100 py-2">
                                 <a href="{% url 'register' %}" class="btn btn-light w-100">Register</a>
